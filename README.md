@@ -96,3 +96,73 @@ c:\ELK\kibana\bin\kibana.bat
 ```
 설치와 실행을 점검하기 위해, elaticsearch는 http://localhost:9200 kibana는 http://localhost:5601 에 접속해서 확인한다.
 
+
+## 4. log 수집
+
+C:\ITStudy\ELK\server1\script1.py
+```python
+from flask import Flask
+
+app = Flask(__name__)
+
+@app.route('/subpage1')
+def deposit():
+    return 'subpage1'
+
+@app.route('/subpage2')
+def withdraw():
+    return 'subpage2'
+
+if __name__ == '__main__':
+    app.run("0.0.0.0", port=5001, debug=True)
+```
+
+C:\ELK\server1\filebeat\filebeat.yml
+
+```yml
+
+filebeat:
+  inputs:
+    - type: log
+      enabled: true
+      paths:
+        - C:/ELK/server1/script1.log
+output.logstash:
+  hosts: ["localhost:5044"]
+```
+
+
+
+
+C:\ELK\logstash\config\logstash-from-server1.conf
+
+```conf
+input {
+    beats {
+        port => 5044
+    }
+}
+
+filter {
+    grok {
+        match => { "message" => '%{IP:client_ip} - - \[%{GREEDYDATA:timestamp}\] "%{WORD:http_method} %{URIPATH:request_path} HTTP/%{NUMBER:http_version}" %{NUMBER:response_code} -'
+}
+    }
+
+    mutate {
+        remove_field => ["host", "@version", "message", "agent", "log"]
+    }
+}
+
+output {
+  elasticsearch {
+    hosts => "http://127.0.0.1:9200"
+    # index => "logs-server1-%{+YYYY.MM.dd}"
+	index => "logs-server"
+    data_stream => false
+    action => "create"
+  }
+  stdout {}
+}
+```
+
