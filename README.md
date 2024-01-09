@@ -15,47 +15,23 @@ Elasticsearch는 NosSQL 데이터를 저장하고, 조회(검색)할 수 있는 
 |매핑|스키마|
 |Query DSL|SQL|
 
-
-
-
 ## Table of Contents
 1. [Step up elasticsearch and kibana](#1.-Step-up-elasticsearch-and-kibana)
 2. [Execute_ElasticSearch](#2.-Execute-ElasticSearch)
 
+## 1. Step up Elasticsearch and Kibana
+ElasticSearch와 Kibana는 Linux, MacOS에서 모두 설치 가능하며, 이 포스팅에서는 Windows 환경을 기준으로 설치 방법에 대해서 기록한다. ElasticSearch를 실행하기 위해서 ElasticSearch와 함께 Kibana를 설치해야 한다. Kibana는 ElasticSearch를 사용할 때, 대시보드를 사용할 수 있도록 GUI를 제공하는 소프트웨어다. 각 소프트웨어의 설치 파일은 아래에서 다운로드 할 수 있다.
 
-## 1. Step up elasticsearch and kibana
-Windows 환경에서 ElasticSearch를 설치하고, 세팅하는 과정을 기록한다.
-
-ElasticSearch
-ElasticSearch를 실행하기 위해서 ElasticSearch와 함께 Kibana를 설치해야 한다. Kibana는 ElasticSearch를 사용할 때, 대시보드를 사용할 수 있도록 GUI를 제공하는 소프트웨어다. 각 소프트웨어의 설치 파일은 아래에서 다운로드 할 수 있다.
 ```console
 https://www.elastic.co/kr/downloads/elasticsearch
 ```
-
 ```console
 https://www.elastic.co/kr/downloads/kibana
 ```
 
-다운로드 이후, 작업 디렉토리에서 압축 파일을 푼다. 예를 들어, C드라이브 아래 작업 디렉토리(ELK, Elasticsearch, Logstash, Kibana의 줄임말)를 생성하고, zip 파일을 옮긴 후, 압축 파일을 푼다.
+다운로드 이후, 작업 디렉토리에서 압축 파일을 푼다. 예를 들어, C드라이브 아래 작업 디렉토리(ELK, Elasticsearch, Logstash, Kibana의 줄임말)를 생성하고, zip 파일을 옮긴 후, 압축 파일을 푼다. 참고로, 개발 및 환경을 세팅할 때, 경로에는 "한글"과 version을 나타내는 "x.x.x"과 같은 폴더/파일 이름은 생략하는 것을 강력히 권장한다. 필자는 elasticsearch와 kibana가 설치된 폴더의 경로를 아래와 같도록, 폴더 명을 각각 'C:\ELK\elasticsearch'와 'C:\ELK\kibana'로 변경하였다.
 
-C:\ELK
-
-참고로, 개발 및 환경을 세팅할 때, 경로에는 "한글"과 version을 나타내는 "x.x.x"과 같은 폴더/파일 이름은 생략하는 것을 강력히 권장한다. 필자는 elasticsearch와 kibana가 설치된 폴더의 경로를 아래와 같도록, 폴더 명을 각각 변경하였다.
-
-C:\ELK\elasticsearch
-
-C:\ELK\kibana
-
-Visual Studio Code를 이용해서 설치를 완료한다. 명령 프롬포트를 실행해서 작업 디렉토리를 열고(최상위 폴더를 ELK로 하고), Visual Stuido Code를 실행한다.
-```console
-C:\Users\seminarNotes>CD C:\ELK
-
-C:\ELK>code .
-```
-Visual Studio Code와 함께 왼쪽 Explorer를 이용해서 elasticsearch.yml파일를 연다.
-C:\ELK\elasticsearch\config\elasticsearch.yml
-
-그리고 아래와 같은 문구를 추가한다.
+먼저, ElasticSearch를 실행하기 위해 yml 파일을 찾아 세팅한다. 'C:\ELK\elasticsearch\config' 폴더 내 'elasticsearch.yml'를 열어서 아래와 같이 실행 정보를 입력한다. 
 ```yaml
 #config/elasticsearch.yml
 cluster.name: cluster-test
@@ -70,10 +46,7 @@ network.host: 127.0.0.1
 discovery.type: "single-node"
 xpack.security.enabled: false
 ```
-
-다음으로 C:\ITStudy\ELK\elasticsearch\config\jvm.options 파일에 접속해서, -Xms5g/-Xmx5g의 부분의 주석을 해제하고, -Xms1g/-Xmx1g로 변경한다. 
-
-
+또, 'C:\ITStudy\ELK\elasticsearch\config\jvm.options 파일에 접속해서, -Xms5g/-Xmx5g의 부분의 주석을 해제하고, -Xms1g/-Xmx1g로 변경한다. 
 ```
 ## -Xms5g
 ## -Xmx5g
@@ -83,11 +56,9 @@ xpack.security.enabled: false
 -Xms1g
 -Xmx1g
 ```
+해당 수정 부분은 ElasticSearch 사용할 때, 할당하는 메모리에 대한 세팅으로, 메모리에 대한 여유가 있는 유저는 -Xms5g/-Xmx5g 그대로 사용해도 무방하다.
 
-해당 수정 부분은 elasticsearch를 사용할 때, 할당하는 메모리에 대한 세팅으로, 메모리에 대한 여유가 있는 유저는 -Xms5g/-Xmx5g 그대로 사용해도 무방하다.
-
-또, C:\ITStudy\ELK\kibana\config\kibana.yml 파일에 접속하여, 맨 아래 아래와 같은 세팅값을 추가한다.
-
+다음으로,  Kibana를 실행하기 위해 yml 파일을 찾아 세팅한다. 'C:\ITStudy\ELK\kibana\config\kibana.yml' 파일에 접속하여, 맨 아래 아래와 같은 세팅값을 추가한다.
 ```yaml
 #config/kibana.yml
 server.port: 5601
@@ -95,6 +66,12 @@ server.host: localhost
 server.publicBaseUrl: "http://localhost:5601"
 elasticsearch.hosts: ["http://localhost:9200"]
 ```
+Kibana 웹 인터페이스를 호스팅할 포트로 5601을 지정하고, Kibana 서버의 호스트 주소를 로컬('localhost')로 지정한다. 외부에 노출되는 경우는 기본 URL로 'http://localhost:5601'를 지정하며, Kibana가 연결할 ElasticSarch 클러스트의 호스트를 'http://localhost:9200'로 지정하는 내용이다.
+
+
+
+
+
 
 설치된 elasticsearch와 kibana는 아래 batch파일을 터미널을 통해 실행한다.
 ```console
