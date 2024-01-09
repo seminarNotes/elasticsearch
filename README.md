@@ -122,7 +122,7 @@ PUT [인덱스 이름]/_doc/[_id값]
   [문서 내용]
 }
 ```
-의 형식으로 문서 색인을 할 수 있다. 예를 들어, 인덱스 이름이 'my_index', id = 1인 문서를 생성하는 쿼리는 아래와 같다.
+의 형식으로 문서 색인을 할 수 있다. 예를 들어, 인덱스 이름이 'my_index', id = 1인 문서를 생성하기 위해 입력창에 입력해야하는 쿼리는 아래와 같다.
 ```python
 PUT my_index/_doc/1
 {
@@ -132,7 +132,7 @@ PUT my_index/_doc/1
 	"created" : "2024-01-09T14:05:01.234Z"
 }
 ```
-
+그러면, 출력창을 통해 성공적으로 문서가 생성되었음을 확인할 수 있다.
 ```python
 {
   "_index": "my_index",
@@ -148,7 +148,32 @@ PUT my_index/_doc/1
   "_primary_term": 1
 }
 ```
-
+### 2. 문서 조회
+RDBMS 내 "SELECT" 쿼리에 해당하는 조회 쿼리 아래와 같이 구성된다.
+```python
+GET [인덱스 이름]/_doc/[_id값]
+```
+생성하였던 문서를 조회하기 위해서, 인덱스 이름과 id를 입력창에 입력한다.
+```python
+GET my_index/_doc/1
+```
+그러면, 출력창에 다음과 같은 결과값이 출력된다.
+```python
+{
+  "_index": "my_index",
+  "_id": "1",
+  "_version": 1,
+  "_seq_no": 0,
+  "_primary_term": 1,
+  "found": true,
+  "_source": {
+    "title": "hello world",
+    "view": 1234,
+    "public": true,
+    "created": "2024-01-09T14:05:01.234Z"
+  }
+}
+```
 
 
 ## 4. log 수집
