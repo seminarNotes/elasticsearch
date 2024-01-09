@@ -3,15 +3,30 @@
 마지막 수정일 : 2024-01-09
   
 ## 0. Overview
-Windows 환경에서 ElasticSearch를 설치하고, 세팅하는 과정을 기록한다.
+Elasticsearch는 NosSQL 데이터를 저장하고, 조회(검색)할 수 있는 아파치 재단의 루씬(Lucence)을 기반으로 개발된 오픈 소스 검색 엔진이다. 관계형 데이터 베이스와 비교하였을 때, 사용하는 용어와 구조가 다르기 때문에 대표적인 개념을 잠시 정리한다. Elasticsearch 내 다양한 object와 관계형 데이터 베이스(RDBMS)에서의 개념은 다음과 같이 대응된다.
+
+|ElasticSearch|RDBMS|
+|---|---|
+|인덱스(Index)|데이터베이스(DB)|
+|샤드|파티션|
+|타입(Type)|테이블|
+|문서|행|
+|필드|열|
+|매핑|스키마|
+|Query DSL|SQL|
+
+
+
 
 ## Table of Contents
-1. [Download setup files and Install with them](#1.-Download-setup-file)
+1. [Step up elasticsearch and kibana](#1.-Step-up-elasticsearch-and-kibana)
 2. [Execute_ElasticSearch](#2.-Execute-ElasticSearch)
 
 
-## 1. Download setup file
+## 1. Step up elasticsearch and kibana
+Windows 환경에서 ElasticSearch를 설치하고, 세팅하는 과정을 기록한다.
 
+ElasticSearch
 ElasticSearch를 실행하기 위해서 ElasticSearch와 함께 Kibana를 설치해야 한다. Kibana는 ElasticSearch를 사용할 때, 대시보드를 사용할 수 있도록 GUI를 제공하는 소프트웨어다. 각 소프트웨어의 설치 파일은 아래에서 다운로드 할 수 있다.
 ```console
 https://www.elastic.co/kr/downloads/elasticsearch
@@ -88,6 +103,18 @@ c:\ELK\elasticsearch\bin\elasticsearch.bat
 c:\ELK\kibana\bin\kibana.bat
 ```
 설치와 실행을 점검하기 위해, elaticsearch는 http://localhost:9200 kibana는 http://localhost:5601 에 접속해서 확인한다.
+
+
+## 2. Elastic 실행
+
+ElasticSearch에서 하나의 인덱스에 하나의 타입만 구성할 수 있다. 그리고 HTTP를 통해 JSON 형식의 Restful API를 사용한다. 이 때, Restful API는 HTTP 헤더와 URL만 사용하여 다양한 형태의 요청을 할 수 있는 HTTP 프로토콜을 최대한 활용하도록 고안된 아키텍쳐를 의미한다. 사용되는 쿼리(Query DSL)은 다음 표와 같다.
+|요청 쿼리|기능|
+|---|---|
+|GET|데이터 조회|
+|PUT, PATCH(일부 수정)|데이터 생성|
+|POST|인덱스 업데이트, 데이터 조회|
+|DELETE|인덱스 데이터 삭제|
+|HEAD|인덱스의 정보 확인|
 
 
 ## 4. log 수집
