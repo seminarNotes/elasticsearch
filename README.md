@@ -17,7 +17,7 @@ Elasticsearch는 NosSQL 데이터를 저장하고, 조회(검색)할 수 있는 
 
 ## Table of Contents
 1. [Step up elasticsearch and kibana](#1.-Step-up-elasticsearch-and-kibana)
-2. [Execute_ElasticSearch](#2.-Execute-ElasticSearch)
+2. [Basic Operation of Elasticsearch](#2.-Basic-Operation-of-ElasticSearch)
 
 ## 1. Step up Elasticsearch and Kibana
 ElasticSearch와 Kibana는 Linux, MacOS에서 모두 설치 가능하며, 이 포스팅에서는 Windows 환경을 기준으로 설치 방법에 대해서 기록한다. ElasticSearch를 실행하기 위해서 ElasticSearch와 함께 Kibana를 설치해야 한다. Kibana는 ElasticSearch를 사용할 때, 대시보드를 사용할 수 있도록 GUI를 제공하는 소프트웨어다. 각 소프트웨어의 설치 파일은 아래에서 다운로드 할 수 있다.
@@ -66,23 +66,41 @@ server.host: localhost
 server.publicBaseUrl: "http://localhost:5601"
 elasticsearch.hosts: ["http://localhost:9200"]
 ```
-Kibana 웹 인터페이스를 호스팅할 포트로 5601을 지정하고, Kibana 서버의 호스트 주소를 로컬('localhost')로 지정한다. 외부에 노출되는 경우는 기본 URL로 'http://localhost:5601'를 지정하며, Kibana가 연결할 ElasticSarch 클러스트의 호스트를 'http://localhost:9200'로 지정하는 내용이다.
+Kibana 웹 인터페이스를 호스팅할 포트로 5601을 지정하고, Kibana 서버의 호스트 주소를 로컬('localhost')로 지정한다. 외부에 노출되는 경우는 기본 URL로 'http://localhost:5601' 를 지정하며, Kibana가 연결할 ElasticSarch 클러스트의 호스트를 'http://localhost:9200' 로 지정하는 내용이다.
 
-
-
-
-
-
-설치된 elasticsearch와 kibana는 아래 batch파일을 터미널을 통해 실행한다.
+구성에 대한 값 변경이 완료되면, 설치된 elasticsearch와 kibana는 아래 batch파일을 터미널을 통해 실행한다.
 ```console
 c:\ELK\elasticsearch\bin\elasticsearch.bat
+```
+batch 파일이 정상적으로 실행 후, 'http://localhost:9200' 에 접속하면, 실행 정보를 확인할 수 있다.
+``` json
+{
+  "name" : "cluster-test-node01",
+  "cluster_name" : "cluster-test",
+  "cluster_uuid" : "3IDHI47jTVOjxUskQSvCrw",
+  "version" : {
+    "number" : "8.11.3",
+    "build_flavor" : "default",
+    "build_type" : "zip",
+    "build_hash" : "64cf052f3b56b1fd4449f5454cb88aca7e739d9a",
+    "build_date" : "2023-12-08T11:33:53.634979452Z",
+    "build_snapshot" : false,
+    "lucene_version" : "9.8.0",
+    "minimum_wire_compatibility_version" : "7.17.0",
+    "minimum_index_compatibility_version" : "7.0.0"
+  },
+  "tagline" : "You Know, for Search"
+}
+```
 
+ElasticSearch가 실행 된 후, Kibana의 batch 파일을 아래와 같이 실행하면, 설치 및 실행이 완료 된다.
+```console
 c:\ELK\kibana\bin\kibana.bat
 ```
-설치와 실행을 점검하기 위해, elaticsearch는 http://localhost:9200 kibana는 http://localhost:5601 에 접속해서 확인한다.
 
+## 2. Basic Operation of Elasticsearch
 
-## 2. Elastic 실행
+kibana는 http://localhost:5601 에 접속해서 확인한다.
 
 ElasticSearch에서 하나의 인덱스에 하나의 타입만 구성할 수 있다. 그리고 HTTP를 통해 JSON 형식의 Restful API를 사용한다. 이 때, Restful API는 HTTP 헤더와 URL만 사용하여 다양한 형태의 요청을 할 수 있는 HTTP 프로토콜을 최대한 활용하도록 고안된 아키텍쳐를 의미한다. 사용되는 쿼리(Query DSL)은 다음 표와 같다.
 |요청 쿼리|기능|
