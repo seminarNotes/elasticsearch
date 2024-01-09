@@ -126,10 +126,10 @@ PUT [인덱스 이름]/_doc/[_id값]
 ```python
 PUT my_index/_doc/1
 {
-	"title": "hello world",
-	"view" : 1234,
-	"public" : true,
-	"created" : "2024-01-09T14:05:01.234Z"
+  "title": "hello world",
+  "view" : 1234,
+  "public" : true,
+  "created" : "2024-01-09T14:05:01.234Z"
 }
 ```
 그러면, 출력창을 통해 성공적으로 문서가 생성되었음을 확인할 수 있다.
@@ -179,18 +179,18 @@ GET my_index/_doc/1
 ``` python
 POST [인덱스 이름]/_update/[_id값]
 {
-	"doc": {
-		[문서 내용]
-	}
+  "doc": {
+    [문서 내용]
+  }
 }
 ```
 만약, 문서 내 'title'을 'hello world'에서 'hello elasticsearch'로 변경한다면, 아래와 같이 입력하여 실행한다. 이 때, 인덱스와 id가 올바르게 입력되었는지 항상 유의한다.
 ``` python
 POST my_index/_update/1
 {
-	"doc": {
-		"title": "hello elaticsearch"
-	}
+  "doc": {
+    "title": "hello elaticsearch"
+  }
 }
 ```
 출력부에는 정상적으로 문서 업데이트가 된 내용이 출력된다. 특히, 문서를 생성(create)했었을 때와 달리, 문서의 버전('_version')이 '2'가 되었음을 확인할 수 있다.
@@ -240,7 +240,6 @@ if __name__ == '__main__':
 C:\ELK\server1\filebeat\filebeat.yml
 
 ```yml
-
 filebeat:
   inputs:
     - type: log
