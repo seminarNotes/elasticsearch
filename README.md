@@ -112,6 +112,43 @@ ElasticSearch에서 하나의 인덱스에 하나의 타입만 구성할 수 있
 |HEAD|인덱스의 정보 확인|
 
 
+### 1. 문서 색인
+먼저, 테이블 생성 및 데이터 입력에 해당하는 문서 색에 대한 쿼리를 알아보자 
+```python
+PUT [인덱스 이름]/_doc/[_id값]
+{
+  [문서 내용]
+}
+```
+의 형식으로 문서 색인을 할 수 있다. 예를 들어, 인덱스 이름이 'my_index', id = 1인 문서를 생성하는 쿼리는 아래와 같다.
+```python
+PUT my_index/_doc/1
+{
+	"title": "hello world",
+	"view" : 1234,
+	"public" : true,
+	"created" : "2024-01-09T14:05:01.234Z"
+}
+```
+
+```python
+{
+  "_index": "my_index",
+  "_id": "1",
+  "_version": 1,
+  "result": "created",
+  "_shards": {
+    "total": 2,
+    "successful": 1,
+    "failed": 0
+  },
+  "_seq_no": 0,
+  "_primary_term": 1
+}
+```
+
+
+
 ## 4. log 수집
 
 C:\ITStudy\ELK\server1\script1.py
