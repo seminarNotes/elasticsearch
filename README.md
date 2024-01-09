@@ -174,6 +174,41 @@ GET my_index/_doc/1
   }
 }
 ```
+### 3. 문서 업데이트
+문서 업데이트는 수정, 삭제, 추가된 내용을 문서에 반영하는 동작을 의미한다.
+``` python
+POST [인덱스 이름]/_update/[_id값]
+{
+	"doc": {
+		[문서 내용]
+	}
+}
+```
+만약, 문서 내 'title'을 'hello world'에서 'hello elasticsearch'로 변경한다면, 아래와 같이 입력하여 실행한다. 이 때, 인덱스와 id가 올바르게 입력되었는지 항상 유의한다.
+``` python
+POST my_index/_update/1
+{
+	"doc": {
+		"title": "hello elaticsearch"
+	}
+}
+```
+출력부에는 정상적으로 문서 업데이트가 된 내용이 출력된다. 특히, 문서를 생성(create)했었을 때와 달리, 문서의 버전('_version')이 '2'가 되었음을 확인할 수 있다.
+```python
+{
+  "_index": "my_index",
+  "_id": "1",
+  "_version": 2,
+  "result": "noop",
+  "_shards": {
+    "total": 2,
+    "successful": 1,
+    "failed": 0
+  },
+  "_seq_no": 2,
+  "_primary_term": 1
+}
+```
 
 
 ## 4. log 수집
