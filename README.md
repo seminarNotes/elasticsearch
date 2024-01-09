@@ -209,6 +209,12 @@ POST my_index/_update/1
   "_primary_term": 1
 }
 ```
+마지막으로 
+
+
+```python
+DELETE [인덱스_이름]/_doc/[_id값]
+```
 
 
 ## 4. log 수집
