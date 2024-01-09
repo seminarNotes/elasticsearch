@@ -18,6 +18,7 @@ Elasticsearch는 NosSQL 데이터를 저장하고, 조회(검색)할 수 있는 
 ## Table of Contents
 1. [Step up elasticsearch and kibana](#1.-Step-up-elasticsearch-and-kibana)
 2. [Basic Operation of Elasticsearch](#2.-Basic-Operation-of-ElasticSearch)
+3. [Query DSL of Elasticsearch](#2.-Query-DSL-of-ElasticSearch)
 
 ## 1. Step up Elasticsearch and Kibana
 ElasticSearch와 Kibana는 Linux, MacOS에서 모두 설치 가능하며, 이 포스팅에서는 Windows 환경을 기준으로 설치 방법에 대해서 기록한다. ElasticSearch를 실행하기 위해서 ElasticSearch와 함께 Kibana를 설치해야 한다. Kibana는 ElasticSearch를 사용할 때, 대시보드를 사용할 수 있도록 GUI를 제공하는 소프트웨어다. 각 소프트웨어의 설치 파일은 아래에서 다운로드 할 수 있다.
@@ -215,6 +216,15 @@ POST my_index/_update/1
 ```python
 DELETE [인덱스_이름]/_doc/[_id값]
 ```
+
+## 3. Query DSL of Elasticsearch
+전체 조건이 맞는 경우 분석된 text field를 검색할 수 있다.
+|Query|Description|
+|--|--|
+|match_all|별다른 조건 없이 해당 index의 모든 document를 검색|
+|match|full text query에 사용하는 일반적인 쿼리이며, data가 포함된 모든 document를 검색한다. operation 속성으로 or 또는 and 조건 적용이 가능하다|
+|match_phrase|입력된 검색어를 순서까지 고려하여 검색을 수행|
+|query_string|URL의 q parameter를 이용하는 검색과 유사|
 
 
 ## 4. log 수집
