@@ -212,12 +212,12 @@ def generate_log_line(timestamp):
         if random.random() < 0.1 :
             sampled_file = "DatabaseConnection.java"
             sampled_loglevel = "ERROR"
-            sampled_message = "Database connection failed: Timeout expired"
+            sampled_message = random.choice(messages[sampled_loglevel])
         
         elif random.random() < 0.05 :
             sampled_file = "DatabaseConnection.java"
             sampled_loglevel = "FATAL"
-            sampled_message = "Database server is not responding"
+            sampled_message = random.choice(messages[sampled_loglevel])
 
     
     # 특정 시간대 접속 유저가 많은 것을 반영
@@ -226,17 +226,17 @@ def generate_log_line(timestamp):
         if random.random() < 0.2 :
             sampled_file = "UserService.java"
             sampled_loglevel = "INFO"
-            sampled_message = "Connection Limit Exceeded"
+            sampled_message = random.choice(messages[sampled_loglevel])
         
         elif random.random() < 0.2 :
             sampled_file = "UserService.java"
             sampled_loglevel = "WARNING"
-            sampled_message = "System Overload Detected"
+            sampled_message = random.choice(messages[sampled_loglevel])
         
         elif random.random() < 0.1 :
             sampled_file = "UserService.java"
             sampled_loglevel = "ERROR"
-            sampled_message = "Too Many Concurrent Connections"
+            sampled_message = random.choice(messages[sampled_loglevel])
 
     log_line = f"{timestamp} {sampled_loglevel} [{sampled_thread}] {sampled_class} ({sampled_file}:{sampled_line}) - {sampled_message}"
     return log_line
