@@ -295,3 +295,19 @@ output {
 }
 ```
 
+
+
+logstash -> filebeat 순으로 실행을 해야하며
+
+logstash는 만들어진 conf 파일을 가지고 logstash.bat을 실행한다 
+``` bash
+cd C:\ELK\logstash\bin
+logstash -f C:\ELK\logstash\config\log_python.conf
+
+```
+
+filebeat은 filebeat.yml로 filebeat.exe을 실행한다
+```
+cd C:\ELK\python_log\filebeat
+.\filebeat.exe -c .\filebeat.yml
+```
