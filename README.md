@@ -310,4 +310,7 @@ filebeat은 filebeat.yml로 filebeat.exe을 실행한다
 ```
 cd C:\ELK\python_log\filebeat
 .\filebeat.exe -c .\filebeat.yml
+
+
+logstash -f C:\ELK\logstash\config\log_python.conf
 ```
