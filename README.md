@@ -61,7 +61,7 @@ utput.elasticsearch:
 ```
 
 마지막으로 filebeat을 실행하는 방법은 명령 프롬프트에서 filebeat이 있는 폴더로 이동을 하고, yml파일을 설정 파일로 지정하여 실행파일(.exe)을 실행한다.
-``` bash
+``` shell
 cd C:\ELK\python_log\filebeat
 .\filebeat.exe -c .\filebeat.yml
 ```
