@@ -3,22 +3,133 @@
 마지막 수정일 : 2024-01-15
   
 ## 0. Overview
-Elasticsearch는 NosSQL 데이터를 저장하고, 조회(검색)할 수 있는 아파치 재단의 루씬(Lucence)을 기반으로 개발된 오픈 소스 검색 엔진이다. 관계형 데이터 베이스와 비교하였을 때, 사용하는 용어와 구조가 다르기 때문에 대표적인 개념을 잠시 정리한다. Elasticsearch 내 다양한 object와 관계형 데이터 베이스(RDBMS)에서의 개념은 다음과 같이 대응된다.
-
-|ElasticSearch|RDBMS|
-|---|---|
-|인덱스(Index)|데이터베이스(DB)|
-|샤드|파티션|
-|타입(Type)|테이블|
-|문서|행|
-|필드|열|
-|매핑|스키마|
-|Query DSL|SQL|
 
 ## Table of Contents
+
+
 1. [Step up elasticsearch and kibana](#1.-Step-up-elasticsearch-and-kibana)
 2. [Basic Operation of Elasticsearch](#2.-Basic-Operation-of-ElasticSearch)
 3. [Query DSL of Elasticsearch](#2.-Query-DSL-of-ElasticSearch)
+
+
+
+## 4. ELK Stack을 이용한 파이프라인 구축
+
+
+ELK Stack 또는 Elastic Stack은 Elasticsearch, Logstash, 그리고 Kibana를 함께 연동하여 데이터 파이프라인을 구축하고, 데이터 수집, 변환, 저장, 시각화, 그리고 분석을 수행하는 오픈 소스 데이터 처리하는 솔루션을 의미한다. 각 구성원은 다음과 같은 역할을 수행한다.
+|Name|Description|
+|--|--|
+|Filebeat|로그 및 이벤트 데이터를 수집하고 전송하기 위한 경량 데이터 수집 에이전트이며,  주로 서버 및 애플리케이션에서 생성되는 로그 파일 및 이벤트 데이터를 실시간으로 수집하여 Elastic Stack 구성 요소로 전송하는 역할을 수행한다.|
+|Logstash|Logstash는 데이터 수집, 변환, 가공, 필터링 및 전송을 위한 데이터 처리 엔진이다. 다양한 데이터 소스로부터 데이터를 수집하고, 필요한 데이터 가공 및 전송을 수행한다.Logstash는 다중 입력 및 출력을 지원하여 여러 데이터 소스 및 목적지 간의 통합을 용이하게 한다.|
+|Elasticsearch|실시간 검색 및 분석 엔진으로, 구조화된 및 비구조화된 데이터를 저장하고 검색하기 위한 오픈 소스 분산 데이터베이스이다.Elasticsearch는 클러스터링을 지원하므로 대규모 데이터 처리가 가능하다.|
+|Kibana| Kibana는 Elasticsearch 데이터를 그래프, 차트, 지도 등 다양한 형태의 시각화하는 대시보드를 지원한다. 대시보드를 활용하여, 로그 및 이벤트 데이터를 실시간으로 수집, 가공, 저장, 시각화하고, 대규모 데이터 분석 및 모니터링을 수행한다.|
+
+각 구성 요소의 역할을 시각화하면 아래 그림과 같다.
+
+![elasticstack](./images/elasticstack.png)
+
+
+
+
+
+![logstash](./images/logstash.gif)
+
+
+
+C:\ITStudy\ELK\server1\script1.py
+```python
+from flask import Flask
+
+app = Flask(__name__)
+
+@app.route('/subpage1')
+def deposit():
+    return 'subpage1'
+
+@app.route('/subpage2')
+def withdraw():
+    return 'subpage2'
+
+if __name__ == '__main__':
+    app.run("0.0.0.0", port=5001, debug=True)
+```
+
+C:\ELK\server1\filebeat\filebeat.yml
+
+```yml
+filebeat:
+  inputs:
+    - type: log
+      enabled: true
+      paths:
+        - C:/ELK/server1/script1.log
+output.logstash:
+  hosts: ["localhost:5044"]
+```
+
+
+
+
+C:\ELK\logstash\config\logstash-from-server1.conf
+
+```conf
+input {
+    beats {
+        port => 5044
+    }
+}
+
+filter {
+    grok {
+        match => { "message" => '%{IP:client_ip} - - \[%{GREEDYDATA:timestamp}\] "%{WORD:http_method} %{URIPATH:request_path} HTTP/%{NUMBER:http_version}" %{NUMBER:response_code} -'
+}
+    }
+
+    mutate {
+        remove_field => ["host", "@version", "message", "agent", "log"]
+    }
+}
+
+output {
+  elasticsearch {
+    hosts => "http://127.0.0.1:9200"
+    # index => "logs-server1-%{+YYYY.MM.dd}"
+	index => "logs-server"
+    data_stream => false
+    action => "create"
+  }
+  stdout {}
+}
+```
+
+
+
+logstash -> filebeat 순으로 실행을 해야하며
+
+logstash는 만들어진 conf 파일을 가지고 logstash.bat을 실행한다 
+``` bash
+cd C:\ELK\logstash\bin
+logstash -f C:\ELK\logstash\config\log_python.conf
+
+```
+
+filebeat은 filebeat.yml로 filebeat.exe을 실행한다
+```
+cd C:\ELK\python_log\filebeat
+.\filebeat.exe -c .\filebeat.yml
+
+
+logstash -f C:\ELK\logstash\config\log_python.conf
+```
+
+
+
+
+
+
+
+
+
 
 ## 1. Step up Elasticsearch and Kibana
 ElasticSearch와 Kibana는 Linux, MacOS에서 모두 설치 가능하며, 이 포스팅에서는 Windows 환경을 기준으로 설치 방법에 대해서 기록한다. ElasticSearch를 실행하기 위해서 ElasticSearch와 함께 Kibana를 설치해야 한다. Kibana는 ElasticSearch를 사용할 때, 대시보드를 사용할 수 있도록 GUI를 제공하는 소프트웨어다. 각 소프트웨어의 설치 파일은 아래에서 다운로드 할 수 있다.
@@ -100,6 +211,19 @@ c:\ELK\kibana\bin\kibana.bat
 ```
 
 ## 2. Basic Operation of Elasticsearch
+
+Elasticsearch는 NosSQL 데이터를 저장하고, 조회(검색)할 수 있는 아파치 재단의 루씬(Lucence)을 기반으로 개발된 오픈 소스 검색 엔진이다. 관계형 데이터 베이스와 비교하였을 때, 사용하는 용어와 구조가 다르기 때문에 대표적인 개념을 잠시 정리한다. Elasticsearch 내 다양한 object와 관계형 데이터 베이스(RDBMS)에서의 개념은 다음과 같이 대응된다.
+
+|ElasticSearch|RDBMS|
+|---|---|
+|인덱스(Index)|데이터베이스(DB)|
+|샤드|파티션|
+|타입(Type)|테이블|
+|문서|행|
+|필드|열|
+|매핑|스키마|
+|Query DSL|SQL|
+
 
 kibana에서 제공하는 UI를 사용하기 위해서 'http://localhost:5601'에 접속한다. 왼쪽 'Dev Tools'를 누르면, 아래와 같은 화면이 나타내는데, 요청 쿼리를 입력하는 왼쪽 부분과 요청 쿼리에 응답하여, 결과값을 보여주는 오른쪽 부분으로 구성되어 있다. 아래 설명에선 편의상, 각각을 입력창과 출력창으로 부르겠다.
 
@@ -225,113 +349,3 @@ DELETE [인덱스_이름]/_doc/[_id값]
 |match|full text query에 사용하는 일반적인 쿼리이며, data가 포함된 모든 document를 검색한다. operation 속성으로 or 또는 and 조건 적용이 가능하다|
 |match_phrase|입력된 검색어를 순서까지 고려하여 검색을 수행|
 |query_string|URL의 q parameter를 이용하는 검색과 유사|
-
-
-## 4. log 수집
-
-
-ELK Stack 또는 Elastic Stack은 Elasticsearch, Logstash, 그리고 Kibana를 함께 연동하여 데이터 파이프라인을 구축하고, 데이터 수집, 변환, 저장, 시각화, 그리고 분석을 수행하는 오픈 소스 데이터 처리하는 솔루션을 의미한다. 각 구성원은 다음과 같은 역할을 수행한다.
-|Name|Description|
-|--|--|
-|Filebeat|로그 및 이벤트 데이터를 수집하고 전송하기 위한 경량 데이터 수집 에이전트이며,  주로 서버 및 애플리케이션에서 생성되는 로그 파일 및 이벤트 데이터를 실시간으로 수집하여 Elastic Stack 구성 요소로 전송하는 역할을 수행한다.|
-|Logstash|Logstash는 데이터 수집, 변환, 가공, 필터링 및 전송을 위한 데이터 처리 엔진이다. 다양한 데이터 소스로부터 데이터를 수집하고, 필요한 데이터 가공 및 전송을 수행한다.Logstash는 다중 입력 및 출력을 지원하여 여러 데이터 소스 및 목적지 간의 통합을 용이하게 한다.|
-|Elasticsearch|실시간 검색 및 분석 엔진으로, 구조화된 및 비구조화된 데이터를 저장하고 검색하기 위한 오픈 소스 분산 데이터베이스이다.Elasticsearch는 클러스터링을 지원하므로 대규모 데이터 처리가 가능하다.|
-|Kibana| Kibana는 Elasticsearch 데이터를 그래프, 차트, 지도 등 다양한 형태의 시각화하는 대시보드를 지원한다. 대시보드를 활용하여, 로그 및 이벤트 데이터를 실시간으로 수집, 가공, 저장, 시각화하고, 대규모 데이터 분석 및 모니터링을 수행한다.|
-
-각 구성 요소의 역할을 시각화하면 아래 그림과 같다.
-
-![elasticstack](./images/elasticstack.png)
-
-
-
-
-
-![logstash](./images/logstash.gif)
-
-
-
-C:\ITStudy\ELK\server1\script1.py
-```python
-from flask import Flask
-
-app = Flask(__name__)
-
-@app.route('/subpage1')
-def deposit():
-    return 'subpage1'
-
-@app.route('/subpage2')
-def withdraw():
-    return 'subpage2'
-
-if __name__ == '__main__':
-    app.run("0.0.0.0", port=5001, debug=True)
-```
-
-C:\ELK\server1\filebeat\filebeat.yml
-
-```yml
-filebeat:
-  inputs:
-    - type: log
-      enabled: true
-      paths:
-        - C:/ELK/server1/script1.log
-output.logstash:
-  hosts: ["localhost:5044"]
-```
-
-
-
-
-C:\ELK\logstash\config\logstash-from-server1.conf
-
-```conf
-input {
-    beats {
-        port => 5044
-    }
-}
-
-filter {
-    grok {
-        match => { "message" => '%{IP:client_ip} - - \[%{GREEDYDATA:timestamp}\] "%{WORD:http_method} %{URIPATH:request_path} HTTP/%{NUMBER:http_version}" %{NUMBER:response_code} -'
-}
-    }
-
-    mutate {
-        remove_field => ["host", "@version", "message", "agent", "log"]
-    }
-}
-
-output {
-  elasticsearch {
-    hosts => "http://127.0.0.1:9200"
-    # index => "logs-server1-%{+YYYY.MM.dd}"
-	index => "logs-server"
-    data_stream => false
-    action => "create"
-  }
-  stdout {}
-}
-```
-
-
-
-logstash -> filebeat 순으로 실행을 해야하며
-
-logstash는 만들어진 conf 파일을 가지고 logstash.bat을 실행한다 
-``` bash
-cd C:\ELK\logstash\bin
-logstash -f C:\ELK\logstash\config\log_python.conf
-
-```
-
-filebeat은 filebeat.yml로 filebeat.exe을 실행한다
-```
-cd C:\ELK\python_log\filebeat
-.\filebeat.exe -c .\filebeat.yml
-
-
-logstash -f C:\ELK\logstash\config\log_python.conf
-```
