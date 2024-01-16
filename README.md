@@ -232,9 +232,7 @@ ElasticSearch가 실행 된 후, Kibana의 batch 파일을 아래와 같이 실�
 c:\ELK\kibana\bin\kibana.bat
 ```
 
-elasticsearch, logstash, filebeat을 차례대로 실행하여, 데이터를 입수할 준비가 완료되고, 가상의 log 데이터 및 log 파일을 생성하는 python 파일을 batch 파일로 실행하면, 화면은 아래와 같이 log 데이터를 생성하는 출력 화면과 업데이트된 log 파일을 인식하여, filebeat이 읽어들이고, logstash에 의해 분석되어 elasticsearch에 저장되는 화면을 확인할 수 있다.
-
-
+elasticsearch, logstash, filebeat을 차례대로 실행하여, 데이터를 입수할 준비가 완료되고, 가상의 log 데이터 및 log 파일을 생성하는 python 파일을 batch 파일로 실행하면, 화면은 아래와 같이 log 데이터를 생성하는 출력 화면(오른쪽)과 업데이트된 log 파일을 인식하여, filebeat이 읽어들이고, logstash에 의해 분석되어 elasticsearch에 저장되는 화면(왼쪽)을 확인할 수 있다.
 ![logstash](./images/logstash.gif)
 
 
