@@ -7,14 +7,14 @@ ELK Stack 및 Elasticsearch는 데이터 처리, 모니터링, 분석, 시각화
 
 ## Table of Contents
 
+1. Building a Pipeline Using Elasticsearch(#1.-Building-a-Pipeline-Using-Elasticsearch)
+4. [Step up elasticsearch and kibana](#1.-Step-up-elasticsearch-and-kibana)
+5. [Basic Operation of Elasticsearch](#2.-Basic-Operation-of-ElasticSearch)
+6. [Query DSL of Elasticsearch](#2.-Query-DSL-of-ElasticSearch)
 
-1. [Step up elasticsearch and kibana](#1.-Step-up-elasticsearch-and-kibana)
-2. [Basic Operation of Elasticsearch](#2.-Basic-Operation-of-ElasticSearch)
-3. [Query DSL of Elasticsearch](#2.-Query-DSL-of-ElasticSearch)
 
 
-
-## 4. ELK Stack을 이용한 파이프라인 구축
+## 1. Building a Pipeline Using Elasticsearch
 
 
 ELK Stack 또는 Elastic Stack은 Elasticsearch, Logstash, 그리고 Kibana를 함께 연동하여 데이터 파이프라인을 구축하고, 데이터 수집, 변환, 저장, 시각화, 그리고 분석을 수행하는 오픈 소스 데이터 처리하는 솔루션을 의미한다. 각 구성원은 다음과 같은 역할을 수행한다.
@@ -25,7 +25,7 @@ ELK Stack 또는 Elastic Stack은 Elasticsearch, Logstash, 그리고 Kibana를 �
 |Elasticsearch|실시간 검색 및 분석 엔진으로, 구조화된 및 비구조화된 데이터를 저장하고 검색하기 위한 오픈 소스 분산 데이터베이스이다.Elasticsearch는 클러스터링을 지원하므로 대규모 데이터 처리가 가능하다.|
 |Kibana| Kibana는 Elasticsearch 데이터를 그래프, 차트, 지도 등 다양한 형태의 시각화하는 대시보드를 지원한다. 대시보드를 활용하여, 로그 및 이벤트 데이터를 실시간으로 수집, 가공, 저장, 시각화하고, 대규모 데이터 분석 및 모니터링을 수행한다.|
 
-각 구성 요소의 역할을 시각화하면 아래 그림과 같다.
+요약하면, Elastic Stack을 활용하면, log파일과 같은 다양한 데이터를 읽어, 전처리를 수행하고, ElasticSearch라는 DataBase에 저장하고, 저장된 데이터를 Kibana가 시각화하여, 손쉽게 시각화할 수 있다. 각 구성 요소의 역할을 시각화하면 아래 그림과 같다.
 
 ![elasticstack](./images/elasticstack.png)
 
