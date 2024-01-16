@@ -32,9 +32,36 @@ ELK Stack 또는 Elastic Stack은 Elasticsearch, Logstash, 그리고 Kibana를 �
 본 분석을 위해 실시간으로 가상의 로그 데이터를 생성하는 python 함수를 작성하여 활용하였고, 해당 python 소스는 ELK 내 있는 python 함수이다.
 
 ### 1-1. Execute Filebeat  
-먼저, filebeat을 실행하기 위해서는 읽고자 하는 파일(csv, txt, log 등)의 경로를 입력한 filebeat.yml을 filebeat.exe가 실행하는 구조이다. 
+먼저, filebeat을 실행하기 위해서는 읽고자 하는 파일(csv, txt, log 등)의 경로를 입력한 filebeat.yml을 filebeat.exe가 실행하는 구조이다. 필자는 yml, exe 포함한  filebeat 폴더를 log 데이터가 있는 폴더에 위치해 두었고, yml 파일을 다음과 같이 구성하였다.
+``` yaml
+filebeat:
+  inputs:
+    - type: log
+      enabled: true
+      paths:
+        - C:/ELK/python_log/logs/log_realtime.log
+output.logstash:
+  hosts: ["localhost:5044"]
+```
+inputs 내 paths에 읽고자 하는 로그 파일의 위치를 지정하고, 데이터를 Logstash로 전송하기 위해 Logstash 서버의 호스트와 포트를 입력했다. 대규모 데이터 처리 시, 관련된 데이터 저장소마다 Filebeat을 사용하여 동일한 경로에서 데이터를 수집하도록 경로를 지정하는 것을 권장하지만, yaml 파일을 아래와 같이 구성하여 다른 경로의 파일도 읽어들이도록 구성할 수 있고, logstash 서버로 전송하는 것이 아닌 elasticsearch 서버로 전송할 수 있다.(물론 경로 설정은 아래와 같이 설정할 수 있지만, grok 패턴 분석 및 색인 과정은 별도로 수행해야 한다.)
+
+``` yaml
+filebeat.inputs:
+  - type: log
+    enabled: true
+    paths:
+      - /path/to/logs/*.csv
+      - /path/to/logs/*.txt
+      - /path/to/logs/*.log
+
+utput.elasticsearch:
+  hosts: ["elasticsearch-server:9200"]
+```
+
+읽을 파일과 
 
 
+### 1-2. Execute Logstash  
 
 
 
