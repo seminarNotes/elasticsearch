@@ -235,10 +235,12 @@ c:\ELK\kibana\bin\kibana.bat
 elasticsearch, logstash, filebeat을 차례대로 실행하여, 데이터를 입수할 준비가 완료되고, 가상의 log 데이터 및 log 파일을 생성하는 python 파일을 batch 파일로 실행하면, 화면은 아래와 같이 log 데이터를 생성하는 출력 화면(오른쪽)과 업데이트된 log 파일을 인식하여, filebeat이 읽어들이고, logstash에 의해 분석되어 elasticsearch에 저장되는 화면(왼쪽)을 확인할 수 있다.
 ![logstash](./images/logstash.gif)
 
+## 5. dashboard for kibana  
+내용을 입력하세요.
 
 
 
-## 2. Basic Operation of Elasticsearch
+## 6. Basic Operation of Elasticsearch
 
 Elasticsearch는 NosSQL 데이터를 저장하고, 조회(검색)할 수 있는 아파치 재단의 루씬(Lucence)을 기반으로 개발된 오픈 소스 검색 엔진이다. 관계형 데이터 베이스와 비교하였을 때, 사용하는 용어와 구조가 다르기 때문에 대표적인 개념을 잠시 정리한다. Elasticsearch 내 다양한 object와 관계형 데이터 베이스(RDBMS)에서의 개념은 다음과 같이 대응된다.
 
@@ -267,7 +269,7 @@ ElasticSearch에서 하나의 인덱스에 하나의 타입만 구성할 수 있
 |HEAD|인덱스의 정보 확인|
 
 
-### 1. 문서 색인
+### 6-1. 문서 색인
 먼저, 테이블 생성 및 데이터 입력에 해당하는 문서 색에 대한 쿼리를 알아보자 
 ```python
 PUT [인덱스 이름]/_doc/[_id값]
@@ -301,7 +303,7 @@ PUT my_index/_doc/1
   "_primary_term": 1
 }
 ```
-### 2. 문서 조회
+### 6-2. 문서 조회
 RDBMS 내 "SELECT" 쿼리에 해당하는 조회 쿼리 아래와 같이 구성된다.
 ```python
 GET [인덱스 이름]/_doc/[_id값]
@@ -327,7 +329,7 @@ GET my_index/_doc/1
   }
 }
 ```
-### 3. 문서 업데이트
+### 6-3. 문서 업데이트
 문서 업데이트는 수정, 삭제, 추가된 내용을 문서에 반영하는 동작을 의미한다.
 ``` python
 POST [인덱스 이름]/_update/[_id값]
@@ -369,7 +371,7 @@ POST my_index/_update/1
 DELETE [인덱스_이름]/_doc/[_id값]
 ```
 
-## 3. Query DSL of Elasticsearch
+## 7. Query DSL of Elasticsearch
 전체 조건이 맞는 경우 분석된 text field를 검색할 수 있다.
 |Query|Description|
 |--|--|
