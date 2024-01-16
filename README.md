@@ -31,7 +31,7 @@ ELK Stack 또는 Elastic Stack은 Elasticsearch, Logstash, 그리고 Kibana를 �
 
 ![elasticstack](./images/elasticstack.png)
 
-본 분석을 위해 실시간으로 가상의 로그 데이터를 생성하는 python 함수를 작성하여 활용하였고, 해당 python 소스는 ELK 내 있는 python 함수이다.
+본 분석을 위해 실시간으로 가상의 로그 데이터를 생성하는 python 함수를 작성하여 활용하였고, 해당 python 소스는 ELK 내 있는 python 함수이다. 아래에서 데이터 흐름 순서에 대응하여, filebeat, logstash, elasticsearch, kibana에 대해 차례대로 실행하는 방법에 대해서 설명하고 있지만, 데이터가 전송 후, 수신이 되지 않는 문제를 고려하여, elasticsearch, logstash, filebeat 순으로 실행할 것을 권장한다.
 
 ### 2. Execute Filebeat  
 먼저, filebeat을 실행하기 위해서는 읽고자 하는 파일(csv, txt, log 등)의 경로를 입력한 filebeat.yml을 filebeat.exe가 실행하는 구조이다. 필자는 yml, exe 포함한  filebeat 폴더를 log 데이터가 있는 폴더에 위치해 두었고, yml 파일을 다음과 같이 구성하였다.
@@ -231,6 +231,9 @@ ElasticSearch가 실행 된 후, Kibana의 batch 파일을 아래와 같이 실�
 ```console
 c:\ELK\kibana\bin\kibana.bat
 ```
+
+elasticsearch, logstash, filebeat을 차례대로 실행하여, 데이터를 입수할 준비가 완료되고, 가상의 log 데이터 및 log 파일을 생성하는 python 파일을 batch 파일로 실행하면, 화면은 아래와 같이 log 데이터를 생성하는 출력 화면과 업데이트된 log 파일을 인식하여, filebeat이 읽어들이고, logstash에 의해 분석되어 elasticsearch에 저장되는 화면을 확인할 수 있다.
+
 
 ![logstash](./images/logstash.gif)
 
