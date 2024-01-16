@@ -8,6 +8,8 @@ ELK Stack 및 Elasticsearch는 데이터 처리, 모니터링, 분석, 시각화
 ## Table of Contents
 
 1. [Building a Pipeline Using Elasticsearch](#1.-Building-a-Pipeline-Using-Elasticsearch)
+2. [Execute Filebeat](#2.-Execute-Filebeat)
+3. [Execute Logstash](#2.-Execute-Logstash)
 4. [Step up elasticsearch and kibana](#1.-Step-up-elasticsearch-and-kibana)
 5. [Basic Operation of Elasticsearch](#2.-Basic-Operation-of-ElasticSearch)
 6. [Query DSL of Elasticsearch](#2.-Query-DSL-of-ElasticSearch)
@@ -31,7 +33,7 @@ ELK Stack 또는 Elastic Stack은 Elasticsearch, Logstash, 그리고 Kibana를 �
 
 본 분석을 위해 실시간으로 가상의 로그 데이터를 생성하는 python 함수를 작성하여 활용하였고, 해당 python 소스는 ELK 내 있는 python 함수이다.
 
-### 1-1. Execute Filebeat  
+### 2. Execute Filebeat  
 먼저, filebeat을 실행하기 위해서는 읽고자 하는 파일(csv, txt, log 등)의 경로를 입력한 filebeat.yml을 filebeat.exe가 실행하는 구조이다. 필자는 yml, exe 포함한  filebeat 폴더를 log 데이터가 있는 폴더에 위치해 두었고, yml 파일을 다음과 같이 구성하였다.
 ``` yaml
 filebeat:
@@ -58,10 +60,15 @@ utput.elasticsearch:
   hosts: ["elasticsearch-server:9200"]
 ```
 
-읽을 파일과 
+마지막으로 filebeat을 실행하는 방법은 명령 프롬프트에서 filebeat이 있는 폴더로 이동을 하고, yml파일을 설정 파일로 지정하여 실행파일(.exe)을 실행한다.
+``` bash
+cd C:\ELK\python_log\filebeat
+.\filebeat.exe -c .\filebeat.yml
+```
 
 
-### 1-2. Execute Logstash  
+
+## 3. Execute Logstash  
 
 
 
@@ -148,8 +155,7 @@ logstash -f C:\ELK\logstash\config\log_python.conf
 
 filebeat은 filebeat.yml로 filebeat.exe을 실행한다
 ```
-cd C:\ELK\python_log\filebeat
-.\filebeat.exe -c .\filebeat.yml
+
 
 
 logstash -f C:\ELK\logstash\config\log_python.conf
