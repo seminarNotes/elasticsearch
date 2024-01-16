@@ -95,7 +95,7 @@ output {
   stdout {}
 }
 ```
-입력부(input)에는 beat으로부터 port 5044에 데이터 입력되는 것을 작성하였고, filter에는 로그 파일의 데이터를 어떻게 구분하는지에 대한 정보를 작성한다. 이 때, log 데이터를 분석하기 위해 grok패턴이라는 정규식을 사용한다. log 데이터는 일정한 정규식에 의해 시간, 로그 레벨, 로그 이름, 클래스, 스레드, 메세지와 같은 정보를 담고 있기 때문에 해당 정보를 grok 패턴에 의해 값을 지정하여, elasticsearch(database)에 저장할 수 있도록 값을 parsing하는 역할을 filter 단계에서 수행한다. 본 작업에서 수행되었던 데이터는 
+입력부(input)에는 beat으로부터 port 5044에 데이터 입력되는 것을 작성하였고, filter에는 로그 파일의 데이터를 어떻게 구분하는지에 대한 정보를 작성한다. 이 때, log 데이터를 분석하기 위해 grok패턴이라는 정규식을 사용한다. log 데이터는 일정한 정규식에 의해 시간, 로그 레벨, 로그 이름, 클래스, 스레드, 메세지와 같은 정보를 담고 있기 때문에 해당 정보를 grok 패턴에 의해 값을 지정하여, elasticsearch(database)에 저장할 수 있도록 값을 parsing하는 역할을 filter 단계에서 수행한다. 본 작업을 수행하기 위해 사용한 log 데이터의 샘플은 아래와 같다.
 ```
 2024-01-15 00:00:04,000 | WARN | task-executor-1 | com.example.messaging | EmailSender.java:311 | Resource not available
 2024-01-15 00:00:05,000 | INFO | logging-thread-1 | com.example.messaging | DatabaseConnection.java:476 | Successful login from a new device
@@ -108,11 +108,10 @@ output {
 2024-01-15 00:00:11,000 | WARN | worker-1 | com.example.web | FileParser.java:323 | Network error: Connection lost
 2024-01-15 00:00:12,000 | INFO | scheduler-2 | com.example.exception | HomeController.java:305 | Data backup completed
 ```
-와 같은 데이터이고, 데이터에 대응하는 grok 패턴은
+또, 해당 log 데이터에 대한 grok 패턴은 아래와 같다.
 ```
 %{TIMESTAMP_ISO8601:timestamp} \| %{LOGLEVEL:loglevel} \| %{DATA:thread} \| %{DATA:class} \| %{DATA:file}:%{NUMBER:line} \| %{GREEDYDATA:message}
 ```
-이다.
 출력부(output)에서는 parsing한 데이터를 전송할 서버 정보를 입력하고, elasticsearch 내 데이터가 저장될 index를 지정한다.
 
 log 파일 뿐만 아니라, csv 파일도 parsing을 하여, 데이터베이스에 데이터를 전송할 수 있고, 해당 작업을 수행하기 위해 설정 파일(.conf)을 다음과 같이 작성한다.
@@ -144,32 +143,16 @@ output {
 }
 ```
 
-
-
-
-
-
-
-logstash는 만들어진 conf 파일을 가지고 logstash.bat을 실행한다 
+마지막으로, 설정 파일 작성이 완료 되면, logstash 바이너리 폴더로 이동하여, 아래와 같이 구성 파일과 함께 batch 파일을 실행한다.
 ``` bash
 cd C:\ELK\logstash\bin
 logstash -f C:\ELK\logstash\config\log_python.conf
-
 ```
 
+## 4. Execute ElasticSearch
+elasticsearch와 kibana는 ETL를 수행하는 데이터가 변경되더라도, 설치하는 단계에서 구성한 설정값은 변경되지 않는다. 따라서, elasticsearch와 kibana는 설치 및 세팅하는 방법을 함께 소개한다.
 
-
-
-
-
-
-![logstash](./images/logstash.gif)
-
-
-
-
-## 1. Step up Elasticsearch and Kibana
-ElasticSearch와 Kibana는 Linux, MacOS에서 모두 설치 가능하며, 이 포스팅에서는 Windows 환경을 기준으로 설치 방법에 대해서 기록한다. ElasticSearch를 실행하기 위해서 ElasticSearch와 함께 Kibana를 설치해야 한다. Kibana는 ElasticSearch를 사용할 때, 대시보드를 사용할 수 있도록 GUI를 제공하는 소프트웨어다. 각 소프트웨어의 설치 파일은 아래에서 다운로드 할 수 있다.
+ElasticSearch를 실행하기 위해서 ElasticSearch와 함께 Kibana를 설치해야 한다. Kibana는 ElasticSearch를 사용할 때, 대시보드를 사용할 수 있도록 GUI를 제공하는 소프트웨어다. 각 소프트웨어의 설치 파일은 아래에서 다운로드 할 수 있다.
 
 ```console
 https://www.elastic.co/kr/downloads/elasticsearch
@@ -179,6 +162,8 @@ https://www.elastic.co/kr/downloads/kibana
 ```
 
 다운로드 이후, 작업 디렉토리에서 압축 파일을 푼다. 예를 들어, C드라이브 아래 작업 디렉토리(ELK, Elasticsearch, Logstash, Kibana의 줄임말)를 생성하고, zip 파일을 옮긴 후, 압축 파일을 푼다. 참고로, 개발 및 환경을 세팅할 때, 경로에는 "한글"과 version을 나타내는 "x.x.x"과 같은 폴더/파일 이름은 생략하는 것을 강력히 권장한다. 필자는 elasticsearch와 kibana가 설치된 폴더의 경로를 아래와 같도록, 폴더 명을 각각 'C:\ELK\elasticsearch'와 'C:\ELK\kibana'로 변경하였다.
+
+
 
 먼저, ElasticSearch를 실행하기 위해 yml 파일을 찾아 세팅한다. 'C:\ELK\elasticsearch\config' 폴더 내 'elasticsearch.yml'를 열어서 아래와 같이 실행 정보를 입력한다. 
 ```yaml
@@ -246,6 +231,11 @@ ElasticSearch가 실행 된 후, Kibana의 batch 파일을 아래와 같이 실�
 ```console
 c:\ELK\kibana\bin\kibana.bat
 ```
+
+![logstash](./images/logstash.gif)
+
+
+
 
 ## 2. Basic Operation of Elasticsearch
 
