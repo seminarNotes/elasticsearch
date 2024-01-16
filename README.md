@@ -229,6 +229,8 @@ DELETE [인덱스_이름]/_doc/[_id값]
 
 ## 4. log 수집
 
+
+
 C:\ITStudy\ELK\server1\script1.py
 ```python
 from flask import Flask
