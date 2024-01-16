@@ -70,6 +70,81 @@ cd C:\ELK\python_log\filebeat
 ## 3. Execute Logstash  
 Logstash는 설정 파일(.conf)을 통해 batch 파일로 실행되기 때문에, 설정 파일을 적절하게 세팅해야 한다.
 
+```conf
+input {
+    beats {
+        port => 5044
+        include_codec_tag => false
+    }
+}
+
+filter {
+    grok {
+        match => {"message" => "%{TIMESTAMP_ISO8601:timestamp} \| %{LOGLEVEL:loglevel} \| %{DATA:thread} \| %{DATA:class} \| %{DATA:file}:%{NUMBER:line} \| %{GREEDYDATA:message}"}
+        }
+}
+
+output {
+  elasticsearch {
+    hosts => "http://127.0.0.1:9200"
+    index => "analysis_log_20240116"
+    data_stream => false
+    action => "create"
+    # log_message => "[INFO][%{host}] create index, %{index}"
+  }
+  stdout {}
+}
+```
+입력부(input)에는 beat으로부터 port 5044에 데이터 입력되는 것을 작성하였고, filter에는 로그 파일의 데이터를 어떻게 구분하는지에 대한 정보를 작성한다. 이 때, log 데이터를 분석하기 위해 grok패턴이라는 정규식을 사용한다. log 데이터는 일정한 정규식에 의해 시간, 로그 레벨, 로그 이름, 클래스, 스레드, 메세지와 같은 정보를 담고 있기 때문에 해당 정보를 grok 패턴에 의해 값을 지정하여, elasticsearch(database)에 저장할 수 있도록 값을 parsing하는 역할을 filter 단계에서 수행한다. 본 작업에서 수행되었던 데이터는 
+```
+2024-01-15 00:00:04,000 | WARN | task-executor-1 | com.example.messaging | EmailSender.java:311 | Resource not available
+2024-01-15 00:00:05,000 | INFO | logging-thread-1 | com.example.messaging | DatabaseConnection.java:476 | Successful login from a new device
+2024-01-15 00:00:07,000 | INFO | worker-2 | com.example.util | EmailSender.java:32 | User data retrieved
+2024-01-15 00:00:08,000 | WARN | request-handler-1 | com.example.scheduler | ProductController.java:47 | Task completed with warnings
+2024-01-15 00:00:09,000 | INFO | logging-thread-1 | com.example.scheduler | UserService.java:143 | File uploaded successfully
+2024-01-15 00:00:09,000 | INFO | notification-service-1 | com.example.config | FileParser.java:372 | Product added to cart
+2024-01-15 00:00:09,000 | WARN | worker-2 | com.example.exception | HomeController.java:149 | Task completed with warnings
+2024-01-15 00:00:10,000 | INFO | api-request-1 | com.example.security | UserDTO.java:108 | Connection established successfully
+2024-01-15 00:00:11,000 | WARN | worker-1 | com.example.web | FileParser.java:323 | Network error: Connection lost
+2024-01-15 00:00:12,000 | INFO | scheduler-2 | com.example.exception | HomeController.java:305 | Data backup completed
+```
+와 같은 데이터이고, 데이터에 대응하는 grok 패턴은
+```
+%{TIMESTAMP_ISO8601:timestamp} \| %{LOGLEVEL:loglevel} \| %{DATA:thread} \| %{DATA:class} \| %{DATA:file}:%{NUMBER:line} \| %{GREEDYDATA:message}
+```
+이다.
+출력부(output)에서는 parsing한 데이터를 전송할 서버 정보를 입력하고, elasticsearch 내 데이터가 저장될 index를 지정한다.
+
+log 파일 뿐만 아니라, csv 파일도 parsing을 하여, 데이터베이스에 데이터를 전송할 수 있고, 해당 작업을 수행하기 위해 설정 파일(.conf)을 다음과 같이 작성한다.
+```
+input {
+  file {
+    path => "/var/log/data.csv"
+    start_position => "beginning"
+    sincedb_path => "/dev/null"
+  }
+}
+
+filter {
+  csv {
+    columns => ["id", "name", "age"]
+    separator => ","
+  }
+}
+
+output {
+  jdbc {
+    jdbc_driver_library => "/path/to/jdbc_driver.jar"
+    jdbc_driver_class => "org.jdbc.Driver"
+    jdbc_connection_string => "jdbc:your_database_connection_string"
+    jdbc_user => "your_username"
+    jdbc_password => "your_password"
+    statement => "INSERT INTO your_table (id, name, age) VALUES (?, ?, ?)"
+  }
+}
+```
+
+
 
 
 
@@ -89,77 +164,6 @@ logstash -f C:\ELK\logstash\config\log_python.conf
 
 
 ![logstash](./images/logstash.gif)
-
-
-
-C:\ITStudy\ELK\server1\script1.py
-```python
-from flask import Flask
-
-app = Flask(__name__)
-
-@app.route('/subpage1')
-def deposit():
-    return 'subpage1'
-
-@app.route('/subpage2')
-def withdraw():
-    return 'subpage2'
-
-if __name__ == '__main__':
-    app.run("0.0.0.0", port=5001, debug=True)
-```
-
-C:\ELK\server1\filebeat\filebeat.yml
-
-```yml
-filebeat:
-  inputs:
-    - type: log
-      enabled: true
-      paths:
-        - C:/ELK/server1/script1.log
-output.logstash:
-  hosts: ["localhost:5044"]
-```
-
-
-
-
-C:\ELK\logstash\config\logstash-from-server1.conf
-
-```conf
-input {
-    beats {
-        port => 5044
-    }
-}
-
-filter {
-    grok {
-        match => { "message" => '%{IP:client_ip} - - \[%{GREEDYDATA:timestamp}\] "%{WORD:http_method} %{URIPATH:request_path} HTTP/%{NUMBER:http_version}" %{NUMBER:response_code} -'
-}
-    }
-
-    mutate {
-        remove_field => ["host", "@version", "message", "agent", "log"]
-    }
-}
-
-output {
-  elasticsearch {
-    hosts => "http://127.0.0.1:9200"
-    # index => "logs-server1-%{+YYYY.MM.dd}"
-	index => "logs-server"
-    data_stream => false
-    action => "create"
-  }
-  stdout {}
-}
-```
-
-
-
 
 
 
