@@ -31,7 +31,8 @@ ELK Stack 또는 Elastic Stack은 Elasticsearch, Logstash, 그리고 Kibana를 �
 
 본 분석을 위해 실시간으로 가상의 로그 데이터를 생성하는 python 함수를 작성하여 활용하였고, 해당 python 소스는 ELK 내 있는 python 함수이다.
 
-### 1-1. Execute Filebeat
+### 1-1. Execute Filebeat  
+먼저, filebeat을 실행하기 위해서는 읽고자 하는 파일(csv, txt, log 등)의 경로를 입력한 filebeat.yml을 filebeat.exe가 실행하는 구조이다. 
 
 
 
