@@ -7,7 +7,7 @@ ELK Stack 및 Elasticsearch는 데이터 처리, 모니터링, 분석, 시각화
 
 ## Table of Contents
 
-1. [Building a Pipeline Using Elasticsearch](#1.-Building-a-Pipeline-Using-Elasticsearch)
+1. [Building a Pipeline Using Elastic Stack](#1.-Building-a-Pipeline-Using-Elastic-Stack)
 2. [Execute Filebeat](#2.-Execute-Filebeat)
 3. [Execute Logstash](#3.-Execute-Logstash)
 4. [Step up elasticsearch and kibana](#4.-Step-up-elasticsearch-and-kibana)
@@ -17,7 +17,7 @@ ELK Stack 및 Elasticsearch는 데이터 처리, 모니터링, 분석, 시각화
 
 
 
-## 1. Building a Pipeline Using Elasticsearch
+## 1. Building a Pipeline Using Elastic Stack
 
 
 ELK Stack 또는 Elastic Stack은 Elasticsearch, Logstash, 그리고 Kibana를 함께 연동하여 데이터 파이프라인을 구축하고, 데이터 수집, 변환, 저장, 시각화, 그리고 분석을 수행하는 오픈 소스 데이터 처리하는 솔루션을 의미한다. 각 구성원은 다음과 같은 역할을 수행한다.
