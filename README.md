@@ -12,8 +12,8 @@ ELK Stack 및 Elasticsearch는 데이터 처리, 모니터링, 분석, 시각화
 3. [Execute Logstash](#3.-Execute-Logstash)
 4. [Step up elasticsearch and kibana](#4.-Step-up-elasticsearch-and-kibana)
 5. [Dashboard for Kibana](#5.-Dashboard-for-Kibana)
-6. [Appendix: Basic Operation of Elasticsearch](#6.-Appendix:-Basic-Operation-of-ElasticSearch)
-7. [Appendix: Query DSL of Elasticsearch](#7.-Appendix:-Query-DSL-of-ElasticSearch)
+6. [(Appendix)Basic Operation of Elasticsearch](#6.-(Appendix)-Basic-Operation-of-ElasticSearch)
+7. [(Appendix)Query DSL of Elasticsearch](#7.-(Appendix)-Query-DSL-of-ElasticSearch)
 
 
 
