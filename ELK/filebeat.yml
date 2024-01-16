@@ -1,0 +1,8 @@
+filebeat:
+  inputs:
+    - type: log
+      enabled: true
+      paths:
+        - C:/ELK/python_log/logs/log_realtime.log
+output.logstash:
+  hosts: ["localhost:5044"]
