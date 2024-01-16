@@ -61,14 +61,30 @@ utput.elasticsearch:
 ```
 
 마지막으로 filebeat을 실행하는 방법은 명령 프롬프트에서 filebeat이 있는 폴더로 이동을 하고, yml파일을 설정 파일로 지정하여 실행파일(.exe)을 실행한다.
-``` shell
+```
 cd C:\ELK\python_log\filebeat
+
 .\filebeat.exe -c .\filebeat.yml
+```
+
+## 3. Execute Logstash  
+Logstash는 설정 파일(.conf)을 통해 batch 파일로 실행되기 때문에, 설정 파일을 적절하게 세팅해야 한다.
+
+
+
+
+
+
+logstash는 만들어진 conf 파일을 가지고 logstash.bat을 실행한다 
+``` bash
+cd C:\ELK\logstash\bin
+logstash -f C:\ELK\logstash\config\log_python.conf
+
 ```
 
 
 
-## 3. Execute Logstash  
+
 
 
 
@@ -141,28 +157,6 @@ output {
   stdout {}
 }
 ```
-
-
-
-logstash -> filebeat 순으로 실행을 해야하며
-
-logstash는 만들어진 conf 파일을 가지고 logstash.bat을 실행한다 
-``` bash
-cd C:\ELK\logstash\bin
-logstash -f C:\ELK\logstash\config\log_python.conf
-
-```
-
-filebeat은 filebeat.yml로 filebeat.exe을 실행한다
-```
-
-
-
-logstash -f C:\ELK\logstash\config\log_python.conf
-```
-
-
-
 
 
 
