@@ -229,6 +229,12 @@ DELETE [인덱스_이름]/_doc/[_id값]
 
 ## 4. log 수집
 
+![elasticstack](./images/elasticstack.png)
+
+
+
+
+
 ![logstash](./images/logstash.gif)
 
 
