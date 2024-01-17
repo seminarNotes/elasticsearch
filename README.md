@@ -255,8 +255,8 @@ kibana는 elastiscsearch에 저장된 그래프, 차트, 지도 등 다양한 �
 |Line Graph|[C]|시간대별 Log Level의 비율을 나타내는 Line Graph|
 |Tag Cloud|[D]|Log message에 포함된 단어를 대상으로 생성된 Tag Cloud|
 |Table|[E]|저장된 Log에 대해 집계되는 통계 데이터|
-|Pie|[E]|각 키워드의 구성 비율을 나타내는 파이 그래프|
-|Horizontal Bar|[F]|에러를 많이 기록하는 파일(.java)를 나타내는 수평 막대그래프|
+|Pie Chart|[E]|각 키워드의 구성 비율을 나타내는 파이 그래프|
+|Horizontal Bar|[F]|이슈 사항이 많이 발생하하는 파일(.java)를 나타내는 수평 막대그래프|
 
 ### [A] Text Box  
 대시 보드 내 텍스트 상자에는 제목, 설명 및 안내, 필터, 매개변수, 통계, 메트릭 정보, 주의사항, 링크, 도움말 등을 포함하여, 사용자가 대시 보드를 올바르게 사용하고, 데이터를 신속하고 정확하게 이해할 수 있도록 필요한 텍스트 정보를 작성한다. 위 화면에서는 대시 보드의 제목 "Real-time Log Data Status Dashboard"를 작성하였으며, 대시보드에 대한 간략한 설명과 사용된 데이터가 가상의 데이터라는 주의사항을 포함한 내용을 기재하였다.
@@ -291,14 +291,18 @@ Pie Chart는 범주형 또는 명목형 데이터에 대한 전체 대비 부문
 
 ![piechart](./images/piechart.png)
 
-### [F] 
+### [F] Horizontal Bar
+마지막 시각 자료(패널)은 에러가 발생하는 빈도를 파일 별로 구분하여 수평 막대 그래프로 표시한 것으로, 위 Pie Chart는 전체 log에 대해 구성비율을 비교하였다면, 아래 수평 막대그래프에서는 이슈 사항("ERROR", "WARN", "FATAL")에 대해 횟수를 나타내고 있다. 따라서, 아래 막대 그래프를 구성할 때, DataConnection.java의 이슈 사항에 대해 집계를 할 때는 KQL(키바나 쿼리)
 
-내용 정리 6
+```
+(loglevel.keyword : "ERROR" or loglevel.keyword : "WARN" or loglevel.keyword : "FATAL") and (file.keyword = "DatabaseConnection.java")
+```
 
+를 조회한 document를 count하였다. 그 결과, log가 수집된 시간 동안 DataConnection.java의 파일은 약 14,000번의 이슈 사항이 발생하였고, 다른 파일은 약 2,000번의 이슈 사항이 발생했음을 확인할 수 있다.
 
 ![errorfrequency](./images/errorfrequency.png)
 
-
+이 외 다른 필드값과 다른 종류의 패널을 이용하여, 사용자에게 적합한 대시보드를 구성할 수 있으며, 크기와 위치를 자유롭게 배치할 수 있다는 점에서부터 kibana의 폭넓은 활용도에 대해 확인할 수 있는 기회였다.
 
 
 
