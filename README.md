@@ -15,10 +15,10 @@ ELK Stack 또는 Elastic Stack은  Elasticsearch, Logstash, Kibana 및 Beats으�
 1. [Building a Pipeline Using Elastic Stack](#1.-Building-a-Pipeline-Using-Elastic-Stack)
 2. [Execute Beats](#2.-Execute-Beats)
 3. [Execute Logstash](#3.-Execute-Logstash)
-4. [Step up elasticsearch and kibana](#4.-Step-up-elasticsearch-and-kibana)
+4. [Step up Elasticsearch and kibana](#4.-Step-up-Elasticsearch-and-kibana)
 5. [Dashboard for Kibana](#5.-Dashboard-for-Kibana)
-6. [(Appendix)Basic Operation of Elasticsearch](#6.-(Appendix)-Basic-Operation-of-ElasticSearch)
-7. [(Appendix)Query DSL of Elasticsearch](#7.-(Appendix)-Query-DSL-of-ElasticSearch)
+6. [(Appendix)Basic Operation of Elasticsearch](#6.-(Appendix)-Basic-Operation-of-Elasticsearch)
+7. [(Appendix)Query DSL of Elasticsearch](#7.-(Appendix)-Query-DSL-of-Elasticsearch)
 
 
 
@@ -33,11 +33,11 @@ ELK Stack 또는 Elastic Stack은 Elasticsearch, Logstash, 그리고 Kibana를 �
 |Elasticsearch|실시간 검색 및 분석 엔진으로, 구조화된 및 비구조화된 데이터를 저장하고 검색하기 위한 오픈 소스 분산 데이터베이스이다.Elasticsearch는 클러스터링을 지원하므로 대규모 데이터 처리가 가능하다.|
 |Kibana| Kibana는 Elasticsearch 데이터를 그래프, 차트, 지도 등 다양한 형태의 시각화하는 대시보드를 지원한다. 대시보드를 활용하여, 로그 및 이벤트 데이터를 실시간으로 수집, 가공, 저장, 시각화하고, 대규모 데이터 분석 및 모니터링을 수행한다.|
 
-요약하면, Elastic Stack을 활용하면, log파일과 같은 다양한 데이터를 읽어, 전처리를 수행하고, ElasticSearch라는 DataBase에 저장하고, 저장된 데이터를 Kibana가 시각화하여, 손쉽게 시각화할 수 있다. 각 구성 요소의 역할을 시각화하면 아래 그림과 같다.
+요약하면, Elastic Stack을 활용하면, log파일과 같은 다양한 데이터를 읽어, 전처리를 수행하고, Elasticsearch라는 DataBase에 저장하고, 저장된 데이터를 Kibana가 시각화하여, 손쉽게 시각화할 수 있다. 각 구성 요소의 역할을 시각화하면 아래 그림과 같다.
 
 ![elasticstack](./images/elasticstack.png)
 
-본 분석을 위해 실시간으로 가상의 로그 데이터를 생성하는 python 함수를 작성하여 활용하였고, 해당 python 소스는 ELK 내 있는 python 함수이다. 아래에서 데이터 흐름 순서에 대응하여, Beats, logstash, elasticsearch, kibana에 대해 차례대로 실행하는 방법에 대해서 설명하고 있지만, 데이터가 전송 후, 수신이 되지 않는 문제를 고려하여, elasticsearch, logstash, Beats 순으로 실행할 것을 권장한다.
+본 분석을 위해 실시간으로 가상의 로그 데이터를 생성하는 python 함수를 작성하여 활용하였고, 해당 python 소스는 ELK 내 있는 python 함수이다. 아래에서 데이터 흐름 순서에 대응하여, Beats, logstash, Elasticsearch, kibana에 대해 차례대로 실행하는 방법에 대해서 설명하고 있지만, 데이터가 전송 후, 수신이 되지 않는 문제를 고려하여, Elasticsearch, logstash, Beats 순으로 실행할 것을 권장한다.
 
 ### 2. Execute Beats  
 먼저, Beats을 실행하기 위해서는 읽고자 하는 파일(csv, txt, log 등)의 경로를 입력한 Beats.yml을 Beats.exe가 실행하는 구조이다. 필자는 yml, exe 포함한  Beats 폴더를 log 데이터가 있는 폴더에 위치해 두었고, yml 파일을 다음과 같이 구성하였다.
@@ -51,7 +51,7 @@ Beats:
 output.logstash:
   hosts: ["localhost:5044"]
 ```
-inputs 내 paths에 읽고자 하는 로그 파일의 위치를 지정하고, 데이터를 Logstash로 전송하기 위해 Logstash 서버의 호스트와 포트를 입력했다. 대규모 데이터 처리 시, 관련된 데이터 저장소마다 Beats을 사용하여 동일한 경로에서 데이터를 수집하도록 경로를 지정하는 것을 권장하지만, yaml 파일을 아래와 같이 구성하여 다른 경로의 파일도 읽어들이도록 구성할 수 있고, logstash 서버로 전송하는 것이 아닌 elasticsearch 서버로 전송할 수 있다.(물론 경로 설정은 아래와 같이 설정할 수 있지만, grok 패턴 분석 및 색인 과정은 별도로 수행해야 한다.)
+inputs 내 paths에 읽고자 하는 로그 파일의 위치를 지정하고, 데이터를 Logstash로 전송하기 위해 Logstash 서버의 호스트와 포트를 입력했다. 대규모 데이터 처리 시, 관련된 데이터 저장소마다 Beats을 사용하여 동일한 경로에서 데이터를 수집하도록 경로를 지정하는 것을 권장하지만, yaml 파일을 아래와 같이 구성하여 다른 경로의 파일도 읽어들이도록 구성할 수 있고, logstash 서버로 전송하는 것이 아닌 Elasticsearch 서버로 전송할 수 있다.(물론 경로 설정은 아래와 같이 설정할 수 있지만, grok 패턴 분석 및 색인 과정은 별도로 수행해야 한다.)
 
 ``` yaml
 Beats.inputs:
@@ -62,8 +62,8 @@ Beats.inputs:
       - /path/to/logs/*.txt
       - /path/to/logs/*.log
 
-utput.elasticsearch:
-  hosts: ["elasticsearch-server:9200"]
+utput.Elasticsearch:
+  hosts: ["Elasticsearch-server:9200"]
 ```
 
 마지막으로 Beats을 실행하는 방법은 명령 프롬프트에서 Beats이 있는 폴더로 이동을 하고, yml파일을 설정 파일로 지정하여 실행파일(.exe)을 실행한다.
@@ -91,7 +91,7 @@ filter {
 }
 
 output {
-  elasticsearch {
+  Elasticsearch {
     hosts => "http://127.0.0.1:9200"
     index => "analysis_log_20240116"
     data_stream => false
@@ -101,7 +101,7 @@ output {
   stdout {}
 }
 ```
-입력부(input)에는 beat으로부터 port 5044에 데이터 입력되는 것을 작성하였고, filter에는 로그 파일의 데이터를 어떻게 구분하는지에 대한 정보를 작성한다. 이 때, log 데이터를 분석하기 위해 grok패턴이라는 정규식을 사용한다. log 데이터는 일정한 정규식에 의해 시간, 로그 레벨, 로그 이름, 클래스, 스레드, 메세지와 같은 정보를 담고 있기 때문에 해당 정보를 grok 패턴에 의해 값을 지정하여, elasticsearch(database)에 저장할 수 있도록 값을 parsing하는 역할을 filter 단계에서 수행한다. 본 작업을 수행하기 위해 사용한 log 데이터의 샘플은 아래와 같다.
+입력부(input)에는 beat으로부터 port 5044에 데이터 입력되는 것을 작성하였고, filter에는 로그 파일의 데이터를 어떻게 구분하는지에 대한 정보를 작성한다. 이 때, log 데이터를 분석하기 위해 grok패턴이라는 정규식을 사용한다. log 데이터는 일정한 정규식에 의해 시간, 로그 레벨, 로그 이름, 클래스, 스레드, 메세지와 같은 정보를 담고 있기 때문에 해당 정보를 grok 패턴에 의해 값을 지정하여, Elasticsearch(database)에 저장할 수 있도록 값을 parsing하는 역할을 filter 단계에서 수행한다. 본 작업을 수행하기 위해 사용한 log 데이터의 샘플은 아래와 같다.
 ```
 2024-01-15 00:00:04,000 | WARN | task-executor-1 | com.example.messaging | EmailSender.java:311 | Resource not available
 2024-01-15 00:00:05,000 | INFO | logging-thread-1 | com.example.messaging | DatabaseConnection.java:476 | Successful login from a new device
@@ -118,7 +118,7 @@ output {
 ```
 %{TIMESTAMP_ISO8601:timestamp} \| %{LOGLEVEL:loglevel} \| %{DATA:thread} \| %{DATA:class} \| %{DATA:file}:%{NUMBER:line} \| %{GREEDYDATA:message}
 ```
-출력부(output)에서는 parsing한 데이터를 전송할 서버 정보를 입력하고, elasticsearch 내 데이터가 저장될 index를 지정한다.
+출력부(output)에서는 parsing한 데이터를 전송할 서버 정보를 입력하고, Elasticsearch 내 데이터가 저장될 index를 지정한다.
 
 log 파일 뿐만 아니라, csv 파일도 parsing을 하여, 데이터베이스에 데이터를 전송할 수 있고, 해당 작업을 수행하기 위해 설정 파일(.conf)을 다음과 같이 작성한다.
 ```
@@ -155,38 +155,38 @@ cd C:\ELK\logstash\bin
 logstash -f C:\ELK\logstash\config\log_python.conf
 ```
 
-## 4. Execute ElasticSearch
-elasticsearch와 kibana는 ETL를 수행하는 데이터가 변경되더라도, 설치하는 단계에서 구성한 설정값은 변경되지 않는다. 따라서, elasticsearch와 kibana는 설치 및 세팅하는 방법을 함께 소개한다.
+## 4. Execute Elasticsearch
+Elasticsearch와 kibana는 ETL를 수행하는 데이터가 변경되더라도, 설치하는 단계에서 구성한 설정값은 변경되지 않는다. 따라서, Elasticsearch와 kibana는 설치 및 세팅하는 방법을 함께 소개한다.
 
-ElasticSearch를 실행하기 위해서 ElasticSearch와 함께 Kibana를 설치해야 한다. Kibana는 ElasticSearch를 사용할 때, 대시보드를 사용할 수 있도록 GUI를 제공하는 소프트웨어다. 각 소프트웨어의 설치 파일은 아래에서 다운로드 할 수 있다.
+Elasticsearch를 실행하기 위해서 Elasticsearch와 함께 Kibana를 설치해야 한다. Kibana는 Elasticsearch를 사용할 때, 대시보드를 사용할 수 있도록 GUI를 제공하는 소프트웨어다. 각 소프트웨어의 설치 파일은 아래에서 다운로드 할 수 있다.
 
 ```console
-https://www.elastic.co/kr/downloads/elasticsearch
+https://www.elastic.co/kr/downloads/Elasticsearch
 ```
 ```console
 https://www.elastic.co/kr/downloads/kibana
 ```
 
-다운로드 이후, 작업 디렉토리에서 압축 파일을 푼다. 예를 들어, C드라이브 아래 작업 디렉토리(ELK, Elasticsearch, Logstash, Kibana의 줄임말)를 생성하고, zip 파일을 옮긴 후, 압축 파일을 푼다. 참고로, 개발 및 환경을 세팅할 때, 경로에는 "한글"과 version을 나타내는 "x.x.x"과 같은 폴더/파일 이름은 생략하는 것을 강력히 권장한다. 필자는 elasticsearch와 kibana가 설치된 폴더의 경로를 아래와 같도록, 폴더 명을 각각 'C:\ELK\elasticsearch'와 'C:\ELK\kibana'로 변경하였다.
+다운로드 이후, 작업 디렉토리에서 압축 파일을 푼다. 예를 들어, C드라이브 아래 작업 디렉토리(ELK, Elasticsearch, Logstash, Kibana의 줄임말)를 생성하고, zip 파일을 옮긴 후, 압축 파일을 푼다. 참고로, 개발 및 환경을 세팅할 때, 경로에는 "한글"과 version을 나타내는 "x.x.x"과 같은 폴더/파일 이름은 생략하는 것을 강력히 권장한다. 필자는 Elasticsearch와 kibana가 설치된 폴더의 경로를 아래와 같도록, 폴더 명을 각각 'C:\ELK\Elasticsearch'와 'C:\ELK\kibana'로 변경하였다.
 
 
 
-먼저, ElasticSearch를 실행하기 위해 yml 파일을 찾아 세팅한다. 'C:\ELK\elasticsearch\config' 폴더 내 'elasticsearch.yml'를 열어서 아래와 같이 실행 정보를 입력한다. 
+먼저, Elasticsearch를 실행하기 위해 yml 파일을 찾아 세팅한다. 'C:\ELK\Elasticsearch\config' 폴더 내 'Elasticsearch.yml'를 열어서 아래와 같이 실행 정보를 입력한다. 
 ```yaml
-#config/elasticsearch.yml
+#config/Elasticsearch.yml
 cluster.name: cluster-test
 node.name: cluster-test-node01
 
 path:
-  data: C:\ELK\elasticsearch\data
-  logs: C:\ELK\elasticsearch\logs  
+  data: C:\ELK\Elasticsearch\data
+  logs: C:\ELK\Elasticsearch\logs  
 
 network.host: 127.0.0.1
 
 discovery.type: "single-node"
 xpack.security.enabled: false
 ```
-또, 'C:\ITStudy\ELK\elasticsearch\config\jvm.options 파일에 접속해서, -Xms5g/-Xmx5g의 부분의 주석을 해제하고, -Xms1g/-Xmx1g로 변경한다. 
+또, 'C:\ITStudy\ELK\Elasticsearch\config\jvm.options 파일에 접속해서, -Xms5g/-Xmx5g의 부분의 주석을 해제하고, -Xms1g/-Xmx1g로 변경한다. 
 ```
 ## -Xms5g
 ## -Xmx5g
@@ -196,7 +196,7 @@ xpack.security.enabled: false
 -Xms1g
 -Xmx1g
 ```
-해당 수정 부분은 ElasticSearch 사용할 때, 할당하는 메모리에 대한 세팅으로, 메모리에 대한 여유가 있는 유저는 -Xms5g/-Xmx5g 그대로 사용해도 무방하다.
+해당 수정 부분은 Elasticsearch 사용할 때, 할당하는 메모리에 대한 세팅으로, 메모리에 대한 여유가 있는 유저는 -Xms5g/-Xmx5g 그대로 사용해도 무방하다.
 
 다음으로,  Kibana를 실행하기 위해 yml 파일을 찾아 세팅한다. 'C:\ITStudy\ELK\kibana\config\kibana.yml' 파일에 접속하여, 맨 아래 아래와 같은 세팅값을 추가한다.
 ```yaml
@@ -204,13 +204,13 @@ xpack.security.enabled: false
 server.port: 5601
 server.host: localhost
 server.publicBaseUrl: "http://localhost:5601"
-elasticsearch.hosts: ["http://localhost:9200"]
+Elasticsearch.hosts: ["http://localhost:9200"]
 ```
 Kibana 웹 인터페이스를 호스팅할 포트로 5601을 지정하고, Kibana 서버의 호스트 주소를 로컬('localhost')로 지정한다. 외부에 노출되는 경우는 기본 URL로 'http://localhost:5601' 를 지정하며, Kibana가 연결할 ElasticSarch 클러스트의 호스트를 'http://localhost:9200' 로 지정하는 내용이다.
 
-구성에 대한 값 변경이 완료되면, 설치된 elasticsearch와 kibana는 아래 batch파일을 터미널을 통해 실행한다.
+구성에 대한 값 변경이 완료되면, 설치된 Elasticsearch와 kibana는 아래 batch파일을 터미널을 통해 실행한다.
 ```console
-c:\ELK\elasticsearch\bin\elasticsearch.bat
+c:\ELK\Elasticsearch\bin\Elasticsearch.bat
 ```
 batch 파일이 정상적으로 실행 후, 'http://localhost:9200' 에 접속하면, 실행 정보를 확인할 수 있다.
 ``` json
@@ -233,12 +233,12 @@ batch 파일이 정상적으로 실행 후, 'http://localhost:9200' 에 접속�
 }
 ```
 
-ElasticSearch가 실행 된 후, Kibana의 batch 파일을 아래와 같이 실행하면, 설치 및 실행이 완료 된다.
+Elasticsearch가 실행 된 후, Kibana의 batch 파일을 아래와 같이 실행하면, 설치 및 실행이 완료 된다.
 ```console
 c:\ELK\kibana\bin\kibana.bat
 ```
 
-elasticsearch, logstash, Beats을 차례대로 실행하여, 데이터를 입수할 준비가 완료되고, 가상의 log 데이터 및 log 파일을 생성하는 python 파일을 batch 파일로 실행하면, 화면은 아래와 같이 log 데이터를 생성하는 출력 화면(오른쪽)과 업데이트된 log 파일을 인식하여, Beats이 읽어들이고, logstash에 의해 분석되어 elasticsearch에 저장되는 화면(왼쪽)을 확인할 수 있다.
+Elasticsearch, logstash, Beats을 차례대로 실행하여, 데이터를 입수할 준비가 완료되고, 가상의 log 데이터 및 log 파일을 생성하는 python 파일을 batch 파일로 실행하면, 화면은 아래와 같이 log 데이터를 생성하는 출력 화면(오른쪽)과 업데이트된 log 파일을 인식하여, Beats이 읽어들이고, logstash에 의해 분석되어 Elasticsearch에 저장되는 화면(왼쪽)을 확인할 수 있다.
 ![logstash](./images/logstash.gif)
 
 ## 5. Dashboard for Kibana  
@@ -310,7 +310,7 @@ Pie Chart는 범주형 또는 명목형 데이터에 대한 전체 대비 부문
 
 Elasticsearch는 NosSQL 데이터를 저장하고, 조회(검색)할 수 있는 아파치 재단의 루씬(Lucence)을 기반으로 개발된 오픈 소스 검색 엔진이다. 관계형 데이터 베이스와 비교하였을 때, 사용하는 용어와 구조가 다르기 때문에 대표적인 개념을 잠시 정리한다. Elasticsearch 내 다양한 object와 관계형 데이터 베이스(RDBMS)에서의 개념은 다음과 같이 대응된다.
 
-|ElasticSearch|RDBMS|
+|Elasticsearch|RDBMS|
 |---|---|
 |인덱스(Index)|데이터베이스(DB)|
 |샤드|파티션|
@@ -325,7 +325,7 @@ kibana에서 제공하는 UI를 사용하기 위해서 'http://localhost:5601' �
 
 ![dataflow](./images/console.png)
 
-ElasticSearch에서 하나의 인덱스에 하나의 타입만 구성할 수 있다. 그리고 HTTP를 통해 JSON 형식의 Restful API를 사용한다. 이 때, Restful API는 HTTP 헤더와 URL만 사용하여 다양한 형태의 요청을 할 수 있는 HTTP 프로토콜을 최대한 활용하도록 고안된 아키텍쳐를 의미한다. 사용되는 쿼리(Query DSL)은 다음 표와 같다.
+Elasticsearch에서 하나의 인덱스에 하나의 타입만 구성할 수 있다. 그리고 HTTP를 통해 JSON 형식의 Restful API를 사용한다. 이 때, Restful API는 HTTP 헤더와 URL만 사용하여 다양한 형태의 요청을 할 수 있는 HTTP 프로토콜을 최대한 활용하도록 고안된 아키텍쳐를 의미한다. 사용되는 쿼리(Query DSL)은 다음 표와 같다.
 |요청 쿼리|기능|
 |---|---|
 |GET|데이터 조회|
@@ -405,7 +405,7 @@ POST [인덱스 이름]/_update/[_id값]
   }
 }
 ```
-만약, 문서 내 'title'을 'hello world'에서 'hello elasticsearch'로 변경한다면, 아래와 같이 입력하여 실행한다. 이 때, 인덱스와 id가 올바르게 입력되었는지 항상 유의한다.
+만약, 문서 내 'title'을 'hello world'에서 'hello Elasticsearch'로 변경한다면, 아래와 같이 입력하여 실행한다. 이 때, 인덱스와 id가 올바르게 입력되었는지 항상 유의한다.
 ``` python
 POST my_index/_update/1
 {
