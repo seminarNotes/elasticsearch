@@ -270,8 +270,10 @@ Log Stream"은 로그 데이터의 연속적인 흐름을 나타내며, 주로 E
 ![logdatadistribution](./images/logdatadistribution.png)
 
 
-### [D] 
-내용 정리 4
+### [D] Tag Cloud
+아래 자료는 로그 메시지를 Tag Cloud 방식으로 시각화한 것으로, 주요 주제와 키워드를 시각적으로 강조하고 있다. 이를 통해 로그 데이터의 주요 내용을 간결하게 파악하고, 이벤트 또는 이슈를 빠르게 식별할 수 있다. 로그 메시지는 수치형 데이터가 아닌 단어로 이루어져 있기 때문에 긴 메시지를 사용자가 확인하는 데 많은 시간과 자원을 소비하는 데에 어려움이 있어서 Tag Cloud 방식을 선택하게 되었다. 
+
+특히, 사용자는 아래의 정보 중, "Database server is not responding", "File not found in the directory", "Resource not available", "Server error: Internal server error", "Network error: Connection lost"와 같이 부정적 이벤트나 이슈 사항에 대해 빠르게 파악할 수 있어야 한다.
 
 ![tagcloud](./images/tagcloud.png)   
 
