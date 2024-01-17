@@ -277,8 +277,17 @@ Log Stream"은 로그 데이터의 연속적인 흐름을 나타내며, 주로 E
 
 ![tagcloud](./images/tagcloud.png)   
 
-### [E] 
-내용 정리 5
+### [E] Table & Pie Chart
+Table은 각종 수치나 통계 데이터를 입력하여, 사용자에게 요약적인 정보를 전달할 수 있다. 실습에서는 Log 데이터의 개수, Log offset의 평균값, message의 종류 수, tread 종류 수, log level의 종류 수에 대한 정보를 나타내고 있다.
+
+Pie Chart는 범주형 또는 명목형 데이터에 대한 전체 대비 부문 구성비를 표시하는 데 적합하며, 실습에서 Pie Chart를 통해,
+
+1. Log Level Composition Ratio
+2. Treads Composition Ratio
+3. Service Composition Ratio
+4. Files Composition Ratio
+
+에 대해 정리하였다. "1. Log Level Composition Ratio"를 통해 전체 Log 데이터 중, 각 Log Level의 구성 비율을 알 수 있다. "2. Treads Composition Ratio", "3. Service Composition Ratio"에서는 전체 Log 데이터에서 각각 Treads와 Sevice의 구성 비율을 확인 할 수 있는데, 두 객체 모두 한쪽 객체에 치우치지 않고, 균등하다는 사실을 확인할 수 있다. 마지막으로, "4. Files Composition Ratio"는 실행된 파일을 기준으로 Pie Chart를 구성한 것인데, 다른 파일은 모두 균등하지만, data Connection.java 파일에서 많은 log가 발생했음을 확인할 수 있다.
 
 ![piechart](./images/piechart.png)
 
