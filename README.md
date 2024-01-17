@@ -3,7 +3,11 @@
 마지막 수정일 : 2024-01-16
   
 ## 0. Overview
-ELK Stack 및 Elasticsearch는 데이터 처리, 모니터링, 분석, 시각화에 필수적인 도구로, 비정형 데이터 관리 및 분석을 위한 필수 요소이다. 이 도구를 활용하면 다양한 데이터를 분석하고 시각화를 할 수 있으나, 가장 활용도가 높은 분야는 로그 및 이벤트 데이터를 처리하고 시각화하는 부분이라 생각한다. Elastic Stack을 활용해서 가상의 로그 데이터를 수집, 변환, 저장, 시각화하여, 로그 데이터로부터 인사이트를 도출하는 작업을 수행하고자 한다. 또한, 작업과 별개로 Elastic Staack을 설치하고, 간단한 조작법에 대해서 정리하려고 한다.
+ELK Stack 및 Elasticsearch는 데이터 처리, 모니터링, 분석, 시각화에 필수적인 도구로, 비정형 데이터 관리 및 분석을 위한 필수 요소이다. 이 도구를 활용하면 다양한 데이터를 분석하고 시각화를 할 수 있으나, 가장 활용도가 높은 분야는 로그 및 이벤트 데이터를 처리하고 시각화하는 부분이라 생각한다. Elastic Stack을 활용해서 가상의 로그 데이터를 수집, 변환, 저장, 시각화하여, 로그 데이터로부터 인사이트를 도출하는 작업을 수행하고자 한다. 
+[kibanadashboardgif](./images/kibanadashboard.gif)
+
+
+로그 데이터 분석 작업에 추가적으로, Elastic Staack을 설치하고, 간단한 조작법에 대해서 정리하려고 한다.
 
 ## Table of Contents
 
@@ -238,7 +242,7 @@ elasticsearch, logstash, filebeat을 차례대로 실행하여, 데이터를 입
 
 ## 5. dashboard for kibana  
 kibana는 elastiscsearch에 저장된 그래프, 차트, 지도 등 다양한 형태의 시각화하는 대시보드를 지원한다. 위 elastisc stack에 의해 분석되어 저장된 데이터는 아래 대시보드에서와 같이 다양한 차트로 가시화된다.
-![kibanadashboardgif](./images/kibanadashboard.gif)
+!
 
 대시보드와 데이터 분포에 대해 설명하기 위해 대시보드를 아래와 같이 구분한다.
 ![kibanadashboardpng](./images/kibanadashboard_edit.png)
