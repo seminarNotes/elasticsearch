@@ -248,14 +248,15 @@ kibana는 elastiscsearch에 저장된 그래프, 차트, 지도 등 다양한 �
 대시보드와 데이터 분포에 대해 설명하기 위해 대시보드를 아래와 같이 구분한다.
 ![kibanadashboardpng](./images/kibanadashboard_edit.png)
 
-|Type|Tag|Decription|
+|Panel|Tag|Description|
 |--|--|--|
-|Title|[A]|대시보드에 대한 설명|
-|Log|[B]|내용1|
-|Log|[C]|내용2|
-|Log|[D]|내용3|
-|Log|[E]|내용4|
-|Log|[F]|내용5|
+|Text|[A]|대시보드의 제목과 필요한 설명을 첨부하는 Text box|
+|Log Stream|[B]|수집된 로그 데이터가 저장되어 관측할 수 있는 Log Stream|
+|Line Graph|[C]|시간대별 Log Level의 비율을 나타내는 Line Graph|
+|Tag Cloud|[D]|Log message에 포함된 단어를 대상으로 생성된 Tag Cloud|
+|Table|[E]|저장된 Log에 대해 집계되는 통계 데이터|
+|Pie|[E]|각 키워드의 구성 비율을 나타내는 파이 그래프|
+|Horizontal Bar|[F]|ERROR,WARN,FATAL를 많이 기록하는 파일(.java)를 나타내는 수평 막대그래프|
 
 ### [A] 
 내용 정리 1
