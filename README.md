@@ -13,7 +13,7 @@ ELK Stack 또는 Elastic Stack은  Elasticsearch, Logstash, Kibana 및 Beats으�
 ## Table of Contents
 
 1. [Building a Pipeline Using Elastic Stack](#1.-Building-a-Pipeline-Using-Elastic-Stack)
-2. [Execute Filebeat](#2.-Execute-Filebeat)
+2. [Execute Beats](#2.-Execute-Beats)
 3. [Execute Logstash](#3.-Execute-Logstash)
 4. [Step up elasticsearch and kibana](#4.-Step-up-elasticsearch-and-kibana)
 5. [Dashboard for Kibana](#5.-Dashboard-for-Kibana)
@@ -28,7 +28,7 @@ ELK Stack 또는 Elastic Stack은  Elasticsearch, Logstash, Kibana 및 Beats으�
 ELK Stack 또는 Elastic Stack은 Elasticsearch, Logstash, 그리고 Kibana를 함께 연동하여 데이터 파이프라인을 구축하고, 데이터 수집, 변환, 저장, 시각화, 그리고 분석을 수행하는 오픈 소스 데이터 처리하는 솔루션을 의미한다. 각 구성원은 다음과 같은 역할을 수행한다.
 |Name|Description|
 |--|--|
-|Filebeat|로그 및 이벤트 데이터를 수집하고 전송하기 위한 경량 데이터 수집 에이전트이며,  주로 서버 및 애플리케이션에서 생성되는 로그 파일 및 이벤트 데이터를 실시간으로 수집하여 Elastic Stack 구성 요소로 전송하는 역할을 수행한다.|
+|Beats|로그 및 이벤트 데이터를 수집하고 전송하기 위한 경량 데이터 수집 에이전트이며,  주로 서버 및 애플리케이션에서 생성되는 로그 파일 및 이벤트 데이터를 실시간으로 수집하여 Elastic Stack 구성 요소로 전송하는 역할을 수행한다.|
 |Logstash|Logstash는 데이터 수집, 변환, 가공, 필터링 및 전송을 위한 데이터 처리 엔진이다. 다양한 데이터 소스로부터 데이터를 수집하고, 필요한 데이터 가공 및 전송을 수행한다.Logstash는 다중 입력 및 출력을 지원하여 여러 데이터 소스 및 목적지 간의 통합을 용이하게 한다.|
 |Elasticsearch|실시간 검색 및 분석 엔진으로, 구조화된 및 비구조화된 데이터를 저장하고 검색하기 위한 오픈 소스 분산 데이터베이스이다.Elasticsearch는 클러스터링을 지원하므로 대규모 데이터 처리가 가능하다.|
 |Kibana| Kibana는 Elasticsearch 데이터를 그래프, 차트, 지도 등 다양한 형태의 시각화하는 대시보드를 지원한다. 대시보드를 활용하여, 로그 및 이벤트 데이터를 실시간으로 수집, 가공, 저장, 시각화하고, 대규모 데이터 분석 및 모니터링을 수행한다.|
@@ -37,12 +37,12 @@ ELK Stack 또는 Elastic Stack은 Elasticsearch, Logstash, 그리고 Kibana를 �
 
 ![elasticstack](./images/elasticstack.png)
 
-본 분석을 위해 실시간으로 가상의 로그 데이터를 생성하는 python 함수를 작성하여 활용하였고, 해당 python 소스는 ELK 내 있는 python 함수이다. 아래에서 데이터 흐름 순서에 대응하여, filebeat, logstash, elasticsearch, kibana에 대해 차례대로 실행하는 방법에 대해서 설명하고 있지만, 데이터가 전송 후, 수신이 되지 않는 문제를 고려하여, elasticsearch, logstash, filebeat 순으로 실행할 것을 권장한다.
+본 분석을 위해 실시간으로 가상의 로그 데이터를 생성하는 python 함수를 작성하여 활용하였고, 해당 python 소스는 ELK 내 있는 python 함수이다. 아래에서 데이터 흐름 순서에 대응하여, Beats, logstash, elasticsearch, kibana에 대해 차례대로 실행하는 방법에 대해서 설명하고 있지만, 데이터가 전송 후, 수신이 되지 않는 문제를 고려하여, elasticsearch, logstash, Beats 순으로 실행할 것을 권장한다.
 
-### 2. Execute Filebeat  
-먼저, filebeat을 실행하기 위해서는 읽고자 하는 파일(csv, txt, log 등)의 경로를 입력한 filebeat.yml을 filebeat.exe가 실행하는 구조이다. 필자는 yml, exe 포함한  filebeat 폴더를 log 데이터가 있는 폴더에 위치해 두었고, yml 파일을 다음과 같이 구성하였다.
+### 2. Execute Beats  
+먼저, Beats을 실행하기 위해서는 읽고자 하는 파일(csv, txt, log 등)의 경로를 입력한 Beats.yml을 Beats.exe가 실행하는 구조이다. 필자는 yml, exe 포함한  Beats 폴더를 log 데이터가 있는 폴더에 위치해 두었고, yml 파일을 다음과 같이 구성하였다.
 ``` yaml
-filebeat:
+Beats:
   inputs:
     - type: log
       enabled: true
@@ -51,10 +51,10 @@ filebeat:
 output.logstash:
   hosts: ["localhost:5044"]
 ```
-inputs 내 paths에 읽고자 하는 로그 파일의 위치를 지정하고, 데이터를 Logstash로 전송하기 위해 Logstash 서버의 호스트와 포트를 입력했다. 대규모 데이터 처리 시, 관련된 데이터 저장소마다 Filebeat을 사용하여 동일한 경로에서 데이터를 수집하도록 경로를 지정하는 것을 권장하지만, yaml 파일을 아래와 같이 구성하여 다른 경로의 파일도 읽어들이도록 구성할 수 있고, logstash 서버로 전송하는 것이 아닌 elasticsearch 서버로 전송할 수 있다.(물론 경로 설정은 아래와 같이 설정할 수 있지만, grok 패턴 분석 및 색인 과정은 별도로 수행해야 한다.)
+inputs 내 paths에 읽고자 하는 로그 파일의 위치를 지정하고, 데이터를 Logstash로 전송하기 위해 Logstash 서버의 호스트와 포트를 입력했다. 대규모 데이터 처리 시, 관련된 데이터 저장소마다 Beats을 사용하여 동일한 경로에서 데이터를 수집하도록 경로를 지정하는 것을 권장하지만, yaml 파일을 아래와 같이 구성하여 다른 경로의 파일도 읽어들이도록 구성할 수 있고, logstash 서버로 전송하는 것이 아닌 elasticsearch 서버로 전송할 수 있다.(물론 경로 설정은 아래와 같이 설정할 수 있지만, grok 패턴 분석 및 색인 과정은 별도로 수행해야 한다.)
 
 ``` yaml
-filebeat.inputs:
+Beats.inputs:
   - type: log
     enabled: true
     paths:
@@ -66,11 +66,11 @@ utput.elasticsearch:
   hosts: ["elasticsearch-server:9200"]
 ```
 
-마지막으로 filebeat을 실행하는 방법은 명령 프롬프트에서 filebeat이 있는 폴더로 이동을 하고, yml파일을 설정 파일로 지정하여 실행파일(.exe)을 실행한다.
+마지막으로 Beats을 실행하는 방법은 명령 프롬프트에서 Beats이 있는 폴더로 이동을 하고, yml파일을 설정 파일로 지정하여 실행파일(.exe)을 실행한다.
 ```
-cd C:\ELK\python_log\filebeat
+cd C:\ELK\python_log\Beats
 
-.\filebeat.exe -c .\filebeat.yml
+.\Beats.exe -c .\Beats.yml
 ```
 
 ## 3. Execute Logstash  
@@ -238,22 +238,22 @@ ElasticSearch가 실행 된 후, Kibana의 batch 파일을 아래와 같이 실�
 c:\ELK\kibana\bin\kibana.bat
 ```
 
-elasticsearch, logstash, filebeat을 차례대로 실행하여, 데이터를 입수할 준비가 완료되고, 가상의 log 데이터 및 log 파일을 생성하는 python 파일을 batch 파일로 실행하면, 화면은 아래와 같이 log 데이터를 생성하는 출력 화면(오른쪽)과 업데이트된 log 파일을 인식하여, filebeat이 읽어들이고, logstash에 의해 분석되어 elasticsearch에 저장되는 화면(왼쪽)을 확인할 수 있다.
+elasticsearch, logstash, Beats을 차례대로 실행하여, 데이터를 입수할 준비가 완료되고, 가상의 log 데이터 및 log 파일을 생성하는 python 파일을 batch 파일로 실행하면, 화면은 아래와 같이 log 데이터를 생성하는 출력 화면(오른쪽)과 업데이트된 log 파일을 인식하여, Beats이 읽어들이고, logstash에 의해 분석되어 elasticsearch에 저장되는 화면(왼쪽)을 확인할 수 있다.
 ![logstash](./images/logstash.gif)
 
-## 5. dashboard for kibana  
+## 5. Dashboard for Kibana  
 kibana는 elastiscsearch에 저장된 그래프, 차트, 지도 등 다양한 형태의 시각화하는 대시보드를 지원한다. 위 elastisc stack에 의해 분석되어 저장된 데이터는 아래 대시보드에서와 같이 다양한 차트로 가시화된다.
 
 
-대시보드와 데이터 분포에 대해 설명하기 위해 대시보드를 아래와 같이 구분한다.
+대시보드와 데이터에 대해 설명하기 위해 대시보드를 아래와 같이 영역을 구분하였다.
 ![kibanadashboardpng](./images/kibanadashboard_edit.png)
 
 |Panel|Tag|Description|
 |--|--|--|
-|Text Box|[A]|대시보드의 제목과 필요한 설명을 첨부하는 Text Box|
-|Log Stream|[B]|수집된 로그 데이터가 저장되어 관측할 수 있는 Log Stream|
-|Line Graph|[C]|시간대별 Log Level의 비율을 나타내는 Line Graph|
-|Tag Cloud|[D]|Log message에 포함된 단어를 대상으로 생성된 Tag Cloud|
+|Text Box|[A]|대시보드의 제목과 필요한 설명을 첨부하는 텍스트 박스|
+|Log Stream|[B]|수집된 로그 데이터가 저장되어 관측할 수 있는 로그 스트림|
+|Line Graph|[C]|시간대별 Log Level의 비율을 나타내는 선 그래프|
+|Tag Cloud|[D]|Log message에 포함된 단어를 대상으로 생성된 테그 클라우드|
 |Table|[E]|저장된 Log에 대해 집계되는 통계 데이터|
 |Pie Chart|[E]|각 키워드의 구성 비율을 나타내는 파이 그래프|
 |Horizontal Bar|[F]|이슈 사항이 많이 발생하하는 파일(.java)를 나타내는 수평 막대그래프|
@@ -321,7 +321,7 @@ Elasticsearch는 NosSQL 데이터를 저장하고, 조회(검색)할 수 있는 
 |Query DSL|SQL|
 
 
-kibana에서 제공하는 UI를 사용하기 위해서 'http://localhost:5601'에 접속한다. 왼쪽 'Dev Tools'를 누르면, 아래와 같은 화면이 나타내는데, 요청 쿼리를 입력하는 왼쪽 부분과 요청 쿼리에 응답하여, 결과값을 보여주는 오른쪽 부분으로 구성되어 있다. 아래 설명에선 편의상, 각각을 입력창과 출력창으로 부르겠다.
+kibana에서 제공하는 UI를 사용하기 위해서 'http://localhost:5601' 에 접속한다. 왼쪽 'Dev Tools'를 누르면, 아래와 같은 화면이 나타내는데, 요청 쿼리를 입력하는 왼쪽 부분과 요청 쿼리에 응답하여, 결과값을 보여주는 오른쪽 부분으로 구성되어 있다. 아래 설명에선 편의상, 각각을 입력창과 출력창으로 부르겠다.
 
 ![dataflow](./images/console.png)
 
