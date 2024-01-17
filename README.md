@@ -240,7 +240,7 @@ elasticsearch, logstash, filebeat을 차례대로 실행하여, 데이터를 입
 kibana는 elastiscsearch에 저장된 그래프, 차트, 지도 등 다양한 형태의 시각화하는 대시보드를 지원한다. 위 elastisc stack에 의해 분석되어 저장된 데이터는 아래 대시보드에서와 같이 다양한 차트로 가시화된다.
 
 
-![logstash](./images/kibanadashboard.gif)
+![kibanadashboard](./images/kibanadashboard.gif)
 
 
 ## 6. (Appendix)Basic Operation of Elasticsearch
