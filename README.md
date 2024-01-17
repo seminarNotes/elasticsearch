@@ -1,6 +1,6 @@
 # Elastic Stack
 최초 작성일 : 2023-12-27  
-마지막 수정일 : 2024-01-16
+마지막 수정일 : 2024-01-18
   
 ## 0. Overview
 ELK Stack 또는 Elastic Stack은  Elasticsearch, Logstash, Kibana 및 Beats으로 알려진 일련의 오픈 소스 도구와 기술 스택 의미하며, 이들은 대규모 정형/비정형 데이터를 입수, 변환, 저장, 모니터링, 분석, 시각화 하는데 필수적인 도구로 자리잡고 있다. Elastic Stack을 이용하면 다양한 데이터를 분석하고 시각화를 할 수 있지만, 그 중 활용도가 가장 높은 분야는 로그 및 이벤트 데이터를 처리하고 시각화하는 부분이다. 본 프로젝트에서는 Python을 사용하여 가상 로그 데이터를 생성하고, 생성된 로그 데이터를 실시간으로 패턴 분석하여 데이터베이스에 저장하며, 이 데이터를 시각화하는 대시보드를 개발하였다. 아래는 대시보드를 통해 실시간으로 수집되는 로그 데이터를 시각화하는 화면으로, 각 구성요소에 대한 역할은 아래 kibana에 대한 설명에 포함 되어 있다.
@@ -444,4 +444,7 @@ DELETE [인덱스_이름]/_doc/[_id값]
 |match_all|별다른 조건 없이 해당 index의 모든 document를 검색|
 |match|full text query에 사용하는 일반적인 쿼리이며, data가 포함된 모든 document를 검색한다. operation 속성으로 or 또는 and 조건 적용이 가능하다|
 |match_phrase|입력된 검색어를 순서까지 고려하여 검색을 수행|
-|query_string|URL의 q parameter를 이용하는 검색과 유사|
+|query_string|URL의 q parameter를 이용하는 검색과 유사|  
+
+
+[작성중]... ////
