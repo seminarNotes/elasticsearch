@@ -257,12 +257,31 @@ kibana는 elastiscsearch에 저장된 그래프, 차트, 지도 등 다양한 �
 |Log|[E]|내용4|
 |Log|[F]|내용5|
 
+### [A] 
+내용 정리 1
+
+### [B] 
+내용 정리 2
+
+### [C] 
+내용 정리 3
 
 ![logdatadistribution](./images/logdatadistribution.png)
 
+
+### [D] 
+내용 정리 4
+
 ![tagcloud](./images/tagcloud.png)   
 
+### [E] 
+내용 정리 5
+
 ![piechart](./images/piechart.png)
+
+### [F] 
+
+내용 정리 6
 
 
 ![errorfrequency](./images/errorfrequency.png)
