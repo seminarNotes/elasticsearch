@@ -186,7 +186,7 @@ network.host: 127.0.0.1
 discovery.type: "single-node"
 xpack.security.enabled: false
 ```
-또, 'C:\ITStudy\ELK\Elasticsearch\config\jvm.options 파일에 접속해서, -Xms5g/-Xmx5g의 부분의 주석을 해제하고, -Xms1g/-Xmx1g로 변경한다. 
+또, 'C:\ELK\Elasticsearch\config\jvm.options 파일에 접속해서, -Xms5g/-Xmx5g의 부분의 주석을 해제하고, -Xms1g/-Xmx1g로 변경한다. 
 ```
 ## -Xms5g
 ## -Xmx5g
@@ -198,7 +198,7 @@ xpack.security.enabled: false
 ```
 해당 수정 부분은 Elasticsearch 사용할 때, 할당하는 메모리에 대한 세팅으로, 메모리에 대한 여유가 있는 유저는 -Xms5g/-Xmx5g 그대로 사용해도 무방하다.
 
-다음으로,  Kibana를 실행하기 위해 yml 파일을 찾아 세팅한다. 'C:\ITStudy\ELK\kibana\config\kibana.yml' 파일에 접속하여, 맨 아래 아래와 같은 세팅값을 추가한다.
+다음으로,  Kibana를 실행하기 위해 yml 파일을 찾아 세팅한다. 'C:\ELK\kibana\config\kibana.yml' 파일에 접속하여, 맨 아래 아래와 같은 세팅값을 추가한다.
 ```yaml
 #config/kibana.yml
 server.port: 5601
