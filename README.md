@@ -8,7 +8,7 @@ ELK Stack 또는 Elastic Stack은  Elasticsearch, Logstash, Kibana 및 Beats으�
 ![kibanadashboardgif](./images/kibanadashboard.gif)
 
 
-로그 데이터 분석 작업에 추가적으로, Elastic Staack을 설치하고, 간단한 조작법에 대해서 정리하려고 한다.
+본 레포지토리에서는 로그 데이터 분석 작업에 부가적으로, Elastic Stack을 설치하고, 간단히 조작하는 방법(KQL 쿼리, Index 조회)에 대해서 설명한다.
 
 ## Table of Contents
 
