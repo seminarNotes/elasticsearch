@@ -250,16 +250,16 @@ kibana는 elastiscsearch에 저장된 그래프, 차트, 지도 등 다양한 �
 
 |Panel|Tag|Description|
 |--|--|--|
-|Text|[A]|대시보드의 제목과 필요한 설명을 첨부하는 Text box|
+|Text Box|[A]|대시보드의 제목과 필요한 설명을 첨부하는 Text Box|
 |Log Stream|[B]|수집된 로그 데이터가 저장되어 관측할 수 있는 Log Stream|
 |Line Graph|[C]|시간대별 Log Level의 비율을 나타내는 Line Graph|
 |Tag Cloud|[D]|Log message에 포함된 단어를 대상으로 생성된 Tag Cloud|
 |Table|[E]|저장된 Log에 대해 집계되는 통계 데이터|
 |Pie|[E]|각 키워드의 구성 비율을 나타내는 파이 그래프|
-|Horizontal Bar|[F]|ERROR,WARN,FATAL를 많이 기록하는 파일(.java)를 나타내는 수평 막대그래프|
+|Horizontal Bar|[F]|에러를 많이 기록하는 파일(.java)를 나타내는 수평 막대그래프|
 
-### [A] 
-내용 정리 1
+### [A] Text Box  
+대시 보드 내 텍스트 상자에는 제목, 설명 및 안내, 필터, 매개변수, 통계, 메트릭 정보, 주의사항, 링크, 도움말 등을 포함하여, 사용자가 대시 보드를 올바르게 사용하고, 데이터를 신속하고 정확하게 이해할 수 있도록 필요한 텍스트 정보를 작성한다. 위 화면에서는 대시 보드의 제목 "Real-time Log Data Status Dashboard"를 작성하였으며, 대시보드에 대한 간략한 설명과 사용된 데이터가 가상의 데이터라는 주의사항을 포함한 내용을 기재하였다.
 
 ### [B] 
 내용 정리 2
